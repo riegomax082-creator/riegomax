@@ -1,0 +1,1968 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Riego Max</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-dark: #1a6b3a;
+    --green-mid: #2d9e5f;
+    --green-light: #5bc98a;
+    --green-pale: #d4f0e1;
+    --green-ultra: #edf9f2;
+    --blue-accent: #3db8e8;
+    --blue-light: #b8e8f8;
+    --white: #ffffff;
+    --text-dark: #1a2e22;
+    --text-mid: #3a5c44;
+    --text-light: #6b8c73;
+    --shadow: 0 8px 32px rgba(29,107,58,0.18);
+    --radius: 20px;
+    --transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--green-ultra);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  /* Phone frame */
+  .phone-wrap {
+    width: 100vw;
+    max-width: 420px;
+    height: 100vh;
+    max-height: 900px;
+    position: relative;
+    overflow: hidden;
+    background: var(--green-ultra);
+  }
+
+  /* Screens */
+  .screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(100%);
+    transition: var(--transition);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .screen.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateX(0);
+  }
+  .screen.exit-left {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+
+  /* === SCREEN 1: LOGIN === */
+  #s1 {
+    background: linear-gradient(160deg, #e8f5ed 0%, #c8ebd6 50%, #a8dbc0 100%);
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0;
+  }
+  .s1-header {
+    width: 100%;
+    background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 100%);
+    padding: 50px 24px 40px;
+    text-align: center;
+    position: relative;
+    border-radius: 0 0 40px 40px;
+    box-shadow: 0 8px 32px rgba(26,107,58,0.3);
+  }
+  .s1-leaves {
+    position: absolute;
+    top: -10px; right: -10px;
+    width: 120px; opacity: 0.25;
+    pointer-events: none;
+  }
+  .logo-circle {
+    width: 70px; height: 70px;
+    background: white;
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    overflow: hidden;
+  }
+  .logo-circle svg { width: 50px; height: 50px; }
+  .app-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: white;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .app-sub {
+    color: var(--green-pale);
+    font-size: 13px;
+    margin-top: 4px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  .s1-body {
+    width: 100%;
+    padding: 30px 24px 20px;
+    flex: 1;
+  }
+  .welcome-text {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--green-dark);
+    margin-bottom: 6px;
+  }
+  .welcome-sub {
+    color: var(--text-light);
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+
+  .tabs {
+    display: flex;
+    background: rgba(255,255,255,0.6);
+    border-radius: 14px;
+    padding: 4px;
+    margin-bottom: 24px;
+    backdrop-filter: blur(8px);
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background: transparent;
+    border-radius: 10px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  .tab-btn.active {
+    background: var(--green-dark);
+    color: white;
+    box-shadow: 0 4px 12px rgba(26,107,58,0.3);
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+  .form-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-mid);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .form-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid rgba(45,158,95,0.2);
+    border-radius: 14px;
+    background: rgba(255,255,255,0.8);
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    color: var(--text-dark);
+    outline: none;
+    transition: var(--transition);
+    backdrop-filter: blur(4px);
+  }
+  .form-input:focus {
+    border-color: var(--green-mid);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(45,158,95,0.12);
+  }
+
+  .btn-primary {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--green-mid) 0%, var(--green-dark) 100%);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: var(--transition);
+    box-shadow: 0 6px 20px rgba(26,107,58,0.35);
+    margin-top: 8px;
+  }
+  .btn-primary:active { transform: scale(0.97); }
+
+  .link-small {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--text-light);
+  }
+  .link-small a {
+    color: var(--green-dark);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .quienes-btn {
+    width: 100%;
+    padding: 14px;
+    background: rgba(255,255,255,0.7);
+    color: var(--green-dark);
+    border: 2px solid rgba(45,158,95,0.3);
+    border-radius: 16px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: var(--transition);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .quienes-btn:active { transform: scale(0.97); }
+
+  /* === SCREEN 2: QUIENES SOMOS === */
+  #s2 {
+    background: linear-gradient(160deg, #e8f5ed 0%, #c8ebd6 100%);
+  }
+  .s2-header {
+    background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+    padding: 50px 24px 24px;
+    border-radius: 0 0 30px 30px;
+    box-shadow: var(--shadow);
+  }
+  .back-btn {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 12px;
+    font-size: 14px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .s2-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    color: white;
+  }
+  .s2-body { padding: 24px; flex: 1; }
+
+  .info-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 16px rgba(26,107,58,0.1);
+  }
+  .info-card h3 {
+    color: var(--green-dark);
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .info-card p {
+    color: var(--text-mid);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .obj-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    margin-bottom: 10px;
+  }
+  .obj-dot {
+    width: 28px; height: 28px; min-width: 28px;
+    background: var(--green-pale);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+  .contact-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--green-pale);
+    color: var(--text-mid);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .contact-row:last-child { border-bottom: none; }
+  .contact-icon {
+    width: 36px; height: 36px;
+    background: var(--green-pale);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  /* NAV BAR BOTTOM */
+  .nav-bar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 12px 16px 20px;
+    background: white;
+    border-radius: 24px 24px 0 0;
+    box-shadow: 0 -4px 20px rgba(26,107,58,0.12);
+    position: sticky;
+    bottom: 0;
+    left: 0; right: 0;
+    z-index: 10;
+  }
+  .nav-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    background: none; border: none; cursor: pointer;
+    color: var(--text-light);
+    font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 700;
+    transition: var(--transition);
+  }
+  .nav-btn.active-nav { color: var(--green-dark); }
+  .nav-icon {
+    width: 44px; height: 44px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    transition: var(--transition);
+  }
+  .nav-btn.active-nav .nav-icon {
+    background: var(--green-pale);
+  }
+
+  /* === SCREEN 3: SCANNER === */
+  #s3 {
+    background: linear-gradient(160deg, #e8f5ed 0%, #c8ebd6 100%);
+  }
+  .s3-header {
+    background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+    padding: 50px 24px 24px;
+    border-radius: 0 0 30px 30px;
+    box-shadow: var(--shadow);
+    text-align: center;
+  }
+  .s3-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: white;
+    margin-bottom: 4px;
+  }
+  .s3-sub { color: var(--green-pale); font-size: 13px; font-weight: 600; }
+
+  .scanner-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px;
+  }
+  .scanner-box {
+    width: 100%;
+    max-width: 320px;
+    height: 300px;
+    border-radius: 24px;
+    overflow: hidden;
+    position: relative;
+    background: #0d2015;
+    box-shadow: 0 8px 40px rgba(26,107,58,0.3);
+    margin-bottom: 20px;
+  }
+  #camera-feed {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .scan-overlay {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.15);
+  }
+  .scan-frame {
+    width: 160px; height: 160px;
+    border-radius: 16px;
+    position: relative;
+  }
+  .scan-corner {
+    position: absolute;
+    width: 28px; height: 28px;
+    border-color: white;
+    border-style: solid;
+    border-width: 0;
+  }
+  .scan-corner.tl { top:0; left:0; border-top-width:3px; border-left-width:3px; border-radius:6px 0 0 0; }
+  .scan-corner.tr { top:0; right:0; border-top-width:3px; border-right-width:3px; border-radius:0 6px 0 0; }
+  .scan-corner.bl { bottom:0; left:0; border-bottom-width:3px; border-left-width:3px; border-radius:0 0 0 6px; }
+  .scan-corner.br { bottom:0; right:0; border-bottom-width:3px; border-right-width:3px; border-radius:0 0 6px 0; }
+  .scan-line {
+    position: absolute;
+    left: 20px; right: 20px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--green-light), transparent);
+    top: 50%;
+    animation: scanMove 2s ease-in-out infinite;
+  }
+  @keyframes scanMove {
+    0%,100% { transform: translateY(-70px); opacity: 0.5; }
+    50% { transform: translateY(70px); opacity: 1; }
+  }
+
+  .scan-placeholder {
+    width: 100%;
+    max-width: 320px;
+    height: 300px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #1a6b3a 0%, #2d9e5f 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    box-shadow: 0 8px 40px rgba(26,107,58,0.3);
+    margin-bottom: 20px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .scan-placeholder::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .scan-placeholder-icon { font-size: 64px; margin-bottom: 12px; }
+  .scan-placeholder-text {
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+  }
+  .scan-placeholder-sub { color: rgba(255,255,255,0.7); font-size: 13px; margin-top: 6px; }
+
+  .scan-actions {
+    display: flex; gap: 12px; width: 100%; max-width: 320px;
+  }
+  .scan-action-btn {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 16px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .scan-action-btn:active { transform: scale(0.97); }
+  .btn-camera {
+    background: linear-gradient(135deg, var(--green-mid), var(--green-dark));
+    color: white;
+    box-shadow: 0 4px 16px rgba(26,107,58,0.3);
+  }
+  .btn-gallery {
+    background: white;
+    color: var(--green-dark);
+    border: 2px solid var(--green-pale);
+  }
+
+  .analyzing-bar {
+    width: 100%; max-width: 320px;
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    margin-top: 16px;
+    box-shadow: 0 4px 16px rgba(26,107,58,0.1);
+    display: none;
+  }
+  .analyzing-label {
+    font-weight: 700; font-size: 14px; color: var(--green-dark);
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .progress-track {
+    height: 8px;
+    background: var(--green-pale);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green-mid), var(--green-light));
+    border-radius: 4px;
+    width: 0%;
+    transition: width 0.1s linear;
+  }
+  .analyzing-bar.show { display: block; }
+
+  /* === SCREEN 4: PLANT DETAIL === */
+  #s4 {
+    background: linear-gradient(160deg, #e8f5ed 0%, #c8ebd6 100%);
+  }
+  .s4-hero {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+    border-radius: 0 0 30px 30px;
+  }
+  .s4-hero-img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .s4-hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(26,107,58,0.6) 0%, rgba(26,107,58,0.2) 50%, transparent 100%);
+    display: flex; flex-direction: column; justify-content: flex-end; padding: 20px;
+  }
+  .s4-plant-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    color: white;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .s4-plant-sci {
+    color: rgba(255,255,255,0.85);
+    font-style: italic;
+    font-size: 14px;
+  }
+  .s4-top-back {
+    position: absolute; top: 50px; left: 16px;
+    background: rgba(255,255,255,0.25);
+    border: none; color: white;
+    padding: 8px 14px; border-radius: 10px;
+    font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 14px;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+  }
+
+  .s4-body { padding: 20px; }
+  .care-chips {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px;
+  }
+  .care-chip {
+    display: flex; flex-direction: column; align-items: center;
+    background: white;
+    border-radius: 16px;
+    padding: 12px 16px;
+    box-shadow: 0 4px 12px rgba(26,107,58,0.1);
+    flex: 1; min-width: 80px;
+  }
+  .care-chip-icon { font-size: 22px; margin-bottom: 4px; }
+  .care-chip-label { font-size: 10px; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; }
+  .care-chip-val { font-size: 12px; font-weight: 800; color: var(--green-dark); margin-top: 2px; }
+
+  .detail-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 18px;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 12px rgba(26,107,58,0.08);
+  }
+  .detail-card h4 {
+    color: var(--green-dark);
+    font-size: 15px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .detail-card p {
+    color: var(--text-mid);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .tip-list { list-style: none; }
+  .tip-list li {
+    padding: 6px 0;
+    border-bottom: 1px solid var(--green-pale);
+    font-size: 13px;
+    color: var(--text-mid);
+    display: flex; gap: 8px; align-items: flex-start;
+  }
+  .tip-list li:last-child { border-bottom: none; }
+  .tip-bullet { color: var(--green-mid); font-weight: 800; margin-top: 2px; }
+
+  .s4-save-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--green-mid), var(--green-dark));
+    color: white;
+    border: none;
+    border-radius: 16px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(26,107,58,0.35);
+    margin-bottom: 16px;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    transition: var(--transition);
+  }
+  .s4-save-btn:active { transform: scale(0.97); }
+
+  /* === SCREEN 5: CALENDARIO === */
+  #s5 {
+    background: linear-gradient(160deg, #e8f5ed 0%, #c8ebd6 100%);
+  }
+  .s5-header {
+    background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+    padding: 50px 24px 20px;
+    border-radius: 0 0 30px 30px;
+    box-shadow: var(--shadow);
+  }
+  .s5-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: white;
+    margin-bottom: 2px;
+  }
+  .s5-sub { color: var(--green-pale); font-size: 12px; font-weight: 600; }
+
+  .calendar-wrap {
+    background: white;
+    border-radius: var(--radius);
+    margin: 16px;
+    padding: 16px;
+    box-shadow: 0 4px 16px rgba(26,107,58,0.1);
+  }
+  .cal-nav {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px;
+  }
+  .cal-nav-btn {
+    width: 34px; height: 34px;
+    background: var(--green-pale);
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    color: var(--green-dark);
+    font-weight: 800;
+  }
+  .cal-month {
+    font-weight: 800; font-size: 16px; color: var(--green-dark);
+  }
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+  .cal-dow {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-light);
+    padding: 4px 0;
+    text-transform: uppercase;
+  }
+  .cal-day {
+    text-align: center;
+    padding: 6px 2px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dark);
+    cursor: pointer;
+    position: relative;
+    transition: var(--transition);
+  }
+  .cal-day:empty { background: none !important; }
+  .cal-day.other-month { color: var(--text-light); opacity: 0.4; }
+  .cal-day.today {
+    background: var(--green-dark);
+    color: white;
+    font-weight: 800;
+  }
+  .cal-day.selected {
+    background: var(--green-mid);
+    color: white;
+  }
+  .cal-day.has-task::after {
+    content: '';
+    position: absolute;
+    bottom: 2px; left: 50%; transform: translateX(-50%);
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--blue-accent);
+  }
+  .cal-day.today.has-task::after { background: white; }
+  .cal-day:hover:not(.today) { background: var(--green-pale); }
+
+  .tasks-section {
+    margin: 0 16px 16px;
+  }
+  .tasks-header {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--green-dark);
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .task-badge {
+    background: var(--green-dark);
+    color: white;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 8px;
+  }
+
+  .task-card {
+    background: white;
+    border-radius: 16px;
+    padding: 14px;
+    margin-bottom: 10px;
+    box-shadow: 0 3px 12px rgba(26,107,58,0.08);
+    display: flex; gap: 12px; align-items: flex-start;
+    position: relative;
+    overflow: hidden;
+  }
+  .task-card::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 4px;
+  }
+  .task-card.type-riego::before { background: var(--blue-accent); }
+  .task-card.type-poda::before { background: #5bc98a; }
+  .task-card.type-sol::before { background: #f5c842; }
+  .task-card.type-revision::before { background: #e8834a; }
+  .task-card.type-abono::before { background: #9b7fd4; }
+
+  .task-icon-wrap {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .type-riego .task-icon-wrap { background: #e8f7fd; }
+  .type-poda .task-icon-wrap { background: var(--green-pale); }
+  .type-sol .task-icon-wrap { background: #fef9e7; }
+  .type-revision .task-icon-wrap { background: #fef0e8; }
+  .type-abono .task-icon-wrap { background: #f3effe; }
+
+  .task-info { flex: 1; }
+  .task-time { font-size: 11px; color: var(--text-light); font-weight: 700; margin-bottom: 3px; }
+  .task-title { font-size: 14px; font-weight: 800; color: var(--text-dark); margin-bottom: 4px; }
+  .task-desc { font-size: 12px; color: var(--text-light); line-height: 1.5; }
+
+  .task-check {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    border: 2px solid var(--green-pale);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: var(--transition);
+    background: transparent;
+  }
+  .task-check.done {
+    background: var(--green-mid);
+    border-color: var(--green-mid);
+    color: white;
+  }
+
+  .add-task-btn {
+    width: 100%;
+    padding: 14px;
+    border: 2px dashed rgba(45,158,95,0.3);
+    border-radius: 16px;
+    background: rgba(255,255,255,0.6);
+    color: var(--green-dark);
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: var(--transition);
+    margin-bottom: 10px;
+  }
+  .add-task-btn:active { transform: scale(0.98); }
+
+  /* === MY PLANTS SCREEN === */
+  #s6 {
+    background: linear-gradient(160deg, #e8f5ed 0%, #c8ebd6 100%);
+  }
+  .s6-header {
+    background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+    padding: 50px 24px 20px;
+    border-radius: 0 0 30px 30px;
+    box-shadow: var(--shadow);
+  }
+  .s6-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: white;
+  }
+  .s6-body { padding: 16px; flex: 1; }
+
+  .plant-grid { display: flex; flex-direction: column; gap: 12px; }
+  .plant-item {
+    background: white;
+    border-radius: var(--radius);
+    padding: 14px;
+    display: flex; gap: 14px; align-items: center;
+    box-shadow: 0 4px 12px rgba(26,107,58,0.08);
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  .plant-item:active { transform: scale(0.98); }
+  .plant-thumb {
+    width: 60px; height: 60px;
+    border-radius: 14px;
+    object-fit: cover;
+    background: var(--green-pale);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 30px;
+    flex-shrink: 0;
+  }
+  .plant-thumb img { width: 60px; height: 60px; border-radius: 14px; object-fit: cover; }
+  .plant-info { flex: 1; }
+  .plant-common { font-size: 15px; font-weight: 800; color: var(--text-dark); }
+  .plant-sci-small { font-size: 12px; color: var(--text-light); font-style: italic; }
+  .plant-date { font-size: 11px; color: var(--text-light); margin-top: 4px; }
+  .plant-arrow { color: var(--text-light); font-size: 18px; }
+  .empty-state {
+    text-align: center; padding: 40px 20px;
+    color: var(--text-light);
+  }
+  .empty-state-icon { font-size: 56px; margin-bottom: 12px; }
+  .empty-state-text { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--text-mid); }
+  .empty-state-sub { font-size: 13px; }
+
+  /* === MODAL ADD TASK === */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 100;
+    display: none;
+    align-items: flex-end;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.show { display: flex; }
+  .modal-sheet {
+    background: white;
+    border-radius: 24px 24px 0 0;
+    width: 100%; max-width: 420px;
+    margin: 0 auto;
+    padding: 24px;
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  .modal-handle {
+    width: 40px; height: 4px;
+    background: #e0e0e0;
+    border-radius: 2px;
+    margin: 0 auto 20px;
+  }
+  .modal-title {
+    font-size: 18px; font-weight: 800; color: var(--green-dark);
+    margin-bottom: 20px;
+  }
+  .modal-field { margin-bottom: 16px; }
+  .modal-label {
+    font-size: 12px; font-weight: 700; color: var(--text-mid);
+    text-transform: uppercase; letter-spacing: 0.8px;
+    margin-bottom: 6px; display: block;
+  }
+  .modal-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid var(--green-pale);
+    border-radius: 12px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    color: var(--text-dark);
+    outline: none;
+    background: var(--green-ultra);
+  }
+  .modal-input:focus { border-color: var(--green-mid); }
+  .type-selector {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .type-chip {
+    padding: 8px 14px;
+    border: 2px solid var(--green-pale);
+    border-radius: 10px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px; font-weight: 700;
+    cursor: pointer;
+    background: white;
+    color: var(--text-mid);
+    display: flex; align-items: center; gap: 6px;
+    transition: var(--transition);
+  }
+  .type-chip.selected {
+    border-color: var(--green-mid);
+    background: var(--green-pale);
+    color: var(--green-dark);
+  }
+  .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+  .btn-cancel {
+    flex: 1; padding: 14px;
+    background: var(--green-pale);
+    border: none; border-radius: 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px; font-weight: 700;
+    color: var(--green-dark); cursor: pointer;
+  }
+  .btn-save-task {
+    flex: 2; padding: 14px;
+    background: linear-gradient(135deg, var(--green-mid), var(--green-dark));
+    border: none; border-radius: 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px; font-weight: 800;
+    color: white; cursor: pointer;
+    box-shadow: 0 4px 14px rgba(26,107,58,0.3);
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 100px;
+    left: 50%; transform: translateX(-50%);
+    background: var(--green-dark);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 700;
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; }
+
+  /* Spinner */
+  .spinner {
+    width: 20px; height: 20px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Hidden file input */
+  #file-input { display: none; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(45,158,95,0.3); border-radius: 2px; }
+
+  /* Transitions for form panels */
+  .form-panel { display: none; }
+  .form-panel.active { display: block; }
+
+  /* Decorative leaf bg */
+  .leaf-bg {
+    position: absolute;
+    bottom: -20px; right: -20px;
+    width: 140px;
+    opacity: 0.08;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div class="phone-wrap">
+
+  <!-- =================== SCREEN 1: LOGIN/REGISTER =================== -->
+  <div class="screen active" id="s1">
+    <div class="s1-header">
+      <svg class="s1-leaves" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M100 180 C60 160 20 120 30 70 C40 20 90 10 130 40 C170 70 180 130 160 160 C140 190 100 180 100 180Z" fill="white"/>
+        <path d="M140 170 C110 155 90 120 100 85 C110 50 145 45 165 70 C185 95 180 140 165 160 C150 180 140 170 140 170Z" fill="white" opacity="0.6"/>
+      </svg>
+      <div class="logo-circle">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="48" fill="#edf9f2" stroke="#2d9e5f" stroke-width="2"/>
+          <ellipse cx="38" cy="65" rx="22" ry="12" fill="#2d9e5f" opacity="0.3"/>
+          <rect x="47" y="35" width="6" height="38" rx="3" fill="#1a6b3a"/>
+          <circle cx="50" cy="28" r="5" fill="#3db8e8" opacity="0.8"/>
+          <circle cx="42" cy="32" r="4" fill="#3db8e8" opacity="0.6"/>
+          <circle cx="58" cy="32" r="4" fill="#3db8e8" opacity="0.6"/>
+          <circle cx="35" cy="35" r="3" fill="#3db8e8" opacity="0.4"/>
+          <circle cx="65" cy="35" r="3" fill="#3db8e8" opacity="0.4"/>
+          <path d="M28 68 Q38 55 50 60 Q62 55 72 68" stroke="#2d9e5f" stroke-width="3" fill="none"/>
+        </svg>
+      </div>
+      <div class="app-title">RIEGO MAX</div>
+      <div class="app-sub">Sistema Inteligente de Plantas 🌿</div>
+    </div>
+
+    <div class="s1-body">
+      <div class="welcome-text">¡Bienvenido! 👋</div>
+      <div class="welcome-sub">Cuida tus plantas con inteligencia artificial</div>
+
+      <div class="tabs">
+        <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">Iniciar Sesión</button>
+        <button class="tab-btn" id="tab-reg" onclick="switchTab('reg')">Registrarse</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div class="form-panel active" id="panel-login">
+        <div class="form-group">
+          <label class="form-label">Usuario o Email</label>
+          <input class="form-input" id="login-user" type="text" placeholder="Tu usuario o correo">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contraseña</label>
+          <input class="form-input" id="login-pass" type="password" placeholder="••••••••">
+        </div>
+        <button class="btn-primary" onclick="doLogin()">Iniciar Sesión 🚀</button>
+        <div class="link-small">¿No tienes cuenta? <a href="#" onclick="switchTab('reg')">Regístrate aquí</a></div>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <div class="form-panel" id="panel-reg">
+        <div class="form-group">
+          <label class="form-label">Nombre completo</label>
+          <input class="form-input" id="reg-name" type="text" placeholder="Tu nombre">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Usuario</label>
+          <input class="form-input" id="reg-user" type="text" placeholder="Elige un usuario">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-input" id="reg-email" type="email" placeholder="tucorreo@ejemplo.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contraseña</label>
+          <input class="form-input" id="reg-pass" type="password" placeholder="Mínimo 6 caracteres">
+        </div>
+        <button class="btn-primary" onclick="doRegister()">Crear Cuenta ✨</button>
+      </div>
+
+      <button class="quienes-btn" onclick="goTo('s2')">
+        🏢 ¿Quiénes somos?
+      </button>
+    </div>
+  </div>
+
+  <!-- =================== SCREEN 2: QUIENES SOMOS =================== -->
+  <div class="screen" id="s2">
+    <div class="s2-header">
+      <button class="back-btn" onclick="goBack()">← Volver</button>
+      <div class="s2-title">Acerca de Riego Max</div>
+    </div>
+    <div class="s2-body">
+      <div class="info-card">
+        <h3>🌱 Nuestra Misión</h3>
+        <p>Somos una empresa dedicada a ofrecer servicios de <strong>instalación y mantenimiento de sistemas de riego de alta calidad</strong>, adaptados a las necesidades del cliente. Combinamos tecnología de punta con conocimiento botánico para cuidar cada planta.</p>
+      </div>
+
+      <div class="info-card">
+        <h3>🎯 Nuestros Objetivos</h3>
+        <div class="obj-item">
+          <div class="obj-dot">💧</div>
+          <div><strong>Proporcionar</strong> un servicio excepcional al cliente</div>
+        </div>
+        <div class="obj-item">
+          <div class="obj-dot">♻️</div>
+          <div><strong>Mantener</strong> prácticas sostenibles y eco-amigables</div>
+        </div>
+        <div class="obj-item">
+          <div class="obj-dot">🤖</div>
+          <div><strong>Integrar</strong> inteligencia artificial en el cuidado de plantas</div>
+        </div>
+        <div class="obj-item">
+          <div class="obj-dot">📱</div>
+          <div><strong>Innovar</strong> con tecnología accesible para todos</div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <h3>👥 Nuestro Equipo</h3>
+        <div class="obj-item"><div class="obj-dot">👩</div><div>Sixmary Silva</div></div>
+        <div class="obj-item"><div class="obj-dot">👩</div><div>Diana Silva</div></div>
+        <div class="obj-item"><div class="obj-dot">👨</div><div>Robney Ruiz</div></div>
+        <div class="obj-item"><div class="obj-dot">👨</div><div>Julio Sierra</div></div>
+      </div>
+
+      <div class="info-card">
+        <h3>📞 Contáctanos</h3>
+        <div class="contact-row"><div class="contact-icon">📧</div>riegomax@empresa.com</div>
+        <div class="contact-row"><div class="contact-icon">📱</div>+58 412-000-0000</div>
+        <div class="contact-row"><div class="contact-icon">📍</div>Venezuela</div>
+      </div>
+
+      <button class="btn-primary" onclick="goTo('s1')" style="margin-bottom:20px">
+        Comenzar ahora →
+      </button>
+    </div>
+  </div>
+
+  <!-- =================== SCREEN 3: SCANNER =================== -->
+  <div class="screen" id="s3">
+    <div class="s3-header">
+      <div class="s3-title">🔍 Escanear Planta</div>
+      <div class="s3-sub">Enfoca la hoja principal de tu planta</div>
+    </div>
+
+    <div class="scanner-body">
+      <!-- Camera live view (hidden until activated) -->
+      <video id="camera-feed" autoplay playsinline style="display:none; width:100%; max-width:320px; height:300px; border-radius:24px; object-fit:cover; margin-bottom:20px; box-shadow: 0 8px 40px rgba(26,107,58,0.3);"></video>
+      <canvas id="camera-canvas" style="display:none;"></canvas>
+
+      <!-- Placeholder / preview -->
+      <div class="scan-placeholder" id="scan-placeholder" onclick="openCamera()">
+        <div class="scan-frame" style="position:relative; width:160px; height:160px;">
+          <div class="scan-corner tl"></div>
+          <div class="scan-corner tr"></div>
+          <div class="scan-corner bl"></div>
+          <div class="scan-corner br"></div>
+          <div class="scan-line"></div>
+        </div>
+        <div style="margin-top:16px; color:rgba(255,255,255,0.9); font-size:15px; font-weight:700;">Toca para activar cámara</div>
+        <div style="color:rgba(255,255,255,0.6); font-size:13px; margin-top:6px;">o sube una foto de tu planta</div>
+      </div>
+
+      <!-- Preview of uploaded/captured image -->
+      <img id="plant-preview" style="display:none; width:100%; max-width:320px; height:300px; border-radius:24px; object-fit:cover; margin-bottom:20px; box-shadow: 0 8px 40px rgba(26,107,58,0.3);" />
+
+      <div class="scan-actions">
+        <button class="scan-action-btn btn-camera" onclick="openCamera()">📷 Cámara</button>
+        <button class="scan-action-btn btn-gallery" onclick="document.getElementById('file-input').click()">🖼️ Galería</button>
+      </div>
+      <input type="file" id="file-input" accept="image/*" onchange="handleFileUpload(event)">
+
+      <div class="analyzing-bar" id="analyzing-bar">
+        <div class="analyzing-label"><span class="spinner"></span> Analizando con IA...</div>
+        <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      </div>
+    </div>
+
+    <div class="nav-bar">
+      <button class="nav-btn" onclick="goTo('s6')"><div class="nav-icon">🌿</div>Mis Plantas</button>
+      <button class="nav-btn active-nav" onclick="goTo('s3')"><div class="nav-icon">📷</div>Escanear</button>
+      <button class="nav-btn" onclick="goTo('s5')"><div class="nav-icon">📅</div>Calendario</button>
+    </div>
+  </div>
+
+  <!-- =================== SCREEN 4: PLANT DETAIL =================== -->
+  <div class="screen" id="s4">
+    <div class="s4-hero">
+      <img class="s4-hero-img" id="s4-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='220'%3E%3Crect fill='%231a6b3a' width='400' height='220'/%3E%3Ctext x='200' y='120' text-anchor='middle' font-size='80' fill='%23fff' opacity='0.4'%3E🌿%3C/text%3E%3C/svg%3E" alt="Planta">
+      <button class="s4-top-back" onclick="goBack()">← Atrás</button>
+      <div class="s4-hero-overlay">
+        <div class="s4-plant-name" id="s4-common">Cargando...</div>
+        <div class="s4-plant-sci" id="s4-sci">Identificando especie...</div>
+      </div>
+    </div>
+
+    <div style="overflow-y:auto; flex:1;">
+      <div class="s4-body">
+        <div class="care-chips" id="s4-chips">
+          <div class="care-chip"><div class="care-chip-icon">💧</div><div class="care-chip-label">Riego</div><div class="care-chip-val" id="chip-riego">—</div></div>
+          <div class="care-chip"><div class="care-chip-icon">☀️</div><div class="care-chip-label">Luz</div><div class="care-chip-val" id="chip-luz">—</div></div>
+          <div class="care-chip"><div class="care-chip-icon">🌡️</div><div class="care-chip-label">Temp.</div><div class="care-chip-val" id="chip-temp">—</div></div>
+          <div class="care-chip"><div class="care-chip-icon">💨</div><div class="care-chip-label">Humedad</div><div class="care-chip-val" id="chip-hum">—</div></div>
+        </div>
+
+        <div class="detail-card">
+          <h4>📖 Sobre esta planta</h4>
+          <p id="s4-desc">Cargando información...</p>
+        </div>
+
+        <div class="detail-card">
+          <h4>💡 Consejos de Cuidado</h4>
+          <ul class="tip-list" id="s4-tips"></ul>
+        </div>
+
+        <div class="detail-card">
+          <h4>⚠️ Posibles Problemas</h4>
+          <ul class="tip-list" id="s4-problems"></ul>
+        </div>
+
+        <button class="s4-save-btn" onclick="savePlant()">🌱 Guardar en Mis Plantas</button>
+      </div>
+    </div>
+
+    <div class="nav-bar">
+      <button class="nav-btn" onclick="goTo('s6')"><div class="nav-icon">🌿</div>Mis Plantas</button>
+      <button class="nav-btn active-nav" onclick="goTo('s3')"><div class="nav-icon">📷</div>Escanear</button>
+      <button class="nav-btn" onclick="goTo('s5')"><div class="nav-icon">📅</div>Calendario</button>
+    </div>
+  </div>
+
+  <!-- =================== SCREEN 5: CALENDARIO =================== -->
+  <div class="screen" id="s5">
+    <div class="s5-header">
+      <div class="s5-title">📅 Calendario de Cuidados</div>
+      <div class="s5-sub" id="s5-plant-label">Selecciona una planta para ver su programa</div>
+    </div>
+
+    <div style="overflow-y:auto; flex:1; padding-bottom:80px;">
+      <div class="calendar-wrap">
+        <div class="cal-nav">
+          <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
+          <div class="cal-month" id="cal-month-label"></div>
+          <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+      </div>
+
+      <div class="tasks-section">
+        <div class="tasks-header">
+          Tareas del día <span class="task-badge" id="task-count">0</span>
+        </div>
+        <div id="tasks-list"></div>
+        <button class="add-task-btn" onclick="openAddTask()">➕ Agregar tarea</button>
+      </div>
+    </div>
+
+    <div class="nav-bar">
+      <button class="nav-btn" onclick="goTo('s6')"><div class="nav-icon">🌿</div>Mis Plantas</button>
+      <button class="nav-btn" onclick="goTo('s3')"><div class="nav-icon">📷</div>Escanear</button>
+      <button class="nav-btn active-nav" onclick="goTo('s5')"><div class="nav-icon">📅</div>Calendario</button>
+    </div>
+  </div>
+
+  <!-- =================== SCREEN 6: MIS PLANTAS =================== -->
+  <div class="screen" id="s6">
+    <div class="s6-header">
+      <div class="s6-title">🌿 Mis Plantas</div>
+    </div>
+    <div class="s6-body" style="overflow-y:auto; flex:1; padding-bottom:80px;">
+      <div class="plant-grid" id="plant-grid">
+        <!-- filled by JS -->
+      </div>
+    </div>
+    <div class="nav-bar">
+      <button class="nav-btn active-nav" onclick="goTo('s6')"><div class="nav-icon">🌿</div>Mis Plantas</button>
+      <button class="nav-btn" onclick="goTo('s3')"><div class="nav-icon">📷</div>Escanear</button>
+      <button class="nav-btn" onclick="goTo('s5')"><div class="nav-icon">📅</div>Calendario</button>
+    </div>
+  </div>
+
+  <!-- =================== MODAL ADD TASK =================== -->
+  <div class="modal-overlay" id="modal-task" onclick="closeModal(event)">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="modal-handle"></div>
+      <div class="modal-title">➕ Nueva Tarea de Cuidado</div>
+
+      <div class="modal-field">
+        <label class="modal-label">Tipo de tarea</label>
+        <div class="type-selector">
+          <button class="type-chip selected" data-type="riego" onclick="selectType(this)">💧 Riego</button>
+          <button class="type-chip" data-type="poda" onclick="selectType(this)">✂️ Poda</button>
+          <button class="type-chip" data-type="sol" onclick="selectType(this)">☀️ Exposición</button>
+          <button class="type-chip" data-type="revision" onclick="selectType(this)">🔍 Revisión</button>
+          <button class="type-chip" data-type="abono" onclick="selectType(this)">🌿 Abono</button>
+        </div>
+      </div>
+
+      <div class="modal-field">
+        <label class="modal-label">Descripción</label>
+        <input class="modal-input" id="task-desc-input" type="text" placeholder="Ej: Regar con 200ml de agua filtrada">
+      </div>
+
+      <div class="modal-field">
+        <label class="modal-label">Hora</label>
+        <input class="modal-input" id="task-time-input" type="time" value="09:00">
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeAddTask()">Cancelar</button>
+        <button class="btn-save-task" onclick="saveTask()">Guardar Tarea 💾</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+</div>
+
+<!-- sql.js via CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js"></script>
+<script>
+// ================================================
+// DATABASE — SQLite via sql.js (in-memory + localStorage persistence)
+// ================================================
+let DB = null;
+const DB_KEY = 'riego_max_db';
+
+async function initDB() {
+  const SQL = await initSqlJs({
+    locateFile: f => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/${f}`
+  });
+
+  // Load existing DB from localStorage if available
+  const saved = localStorage.getItem(DB_KEY);
+  if (saved) {
+    const arr = new Uint8Array(JSON.parse(saved));
+    DB = new SQL.Database(arr);
+  } else {
+    DB = new SQL.Database();
+  }
+
+  DB.run(`
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT,
+      username TEXT UNIQUE,
+      email TEXT UNIQUE,
+      password TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE TABLE IF NOT EXISTS plants (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER,
+      common_name TEXT,
+      scientific_name TEXT,
+      description TEXT,
+      riego TEXT,
+      luz TEXT,
+      temperatura TEXT,
+      humedad TEXT,
+      tips TEXT,
+      problems TEXT,
+      image_data TEXT,
+      added_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY(user_id) REFERENCES users(id)
+    );
+    CREATE TABLE IF NOT EXISTS tasks (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER,
+      plant_id INTEGER,
+      date TEXT,
+      time TEXT,
+      type TEXT,
+      title TEXT,
+      description TEXT,
+      done INTEGER DEFAULT 0,
+      FOREIGN KEY(user_id) REFERENCES users(id)
+    );
+  `);
+  saveDB();
+}
+
+function saveDB() {
+  const data = DB.export();
+  localStorage.setItem(DB_KEY, JSON.stringify(Array.from(data)));
+}
+
+function dbQuery(sql, params = []) {
+  const stmt = DB.prepare(sql);
+  stmt.bind(params);
+  const rows = [];
+  while (stmt.step()) rows.push(stmt.getAsObject());
+  stmt.free();
+  return rows;
+}
+
+function dbRun(sql, params = []) {
+  DB.run(sql, params);
+  saveDB();
+}
+
+// ================================================
+// STATE
+// ================================================
+let currentUser = null;
+let currentScreen = 's1';
+let screenHistory = [];
+let currentPlantData = null;
+let currentPlantImageData = null;
+let calYear, calMonth, selectedDate;
+let cameraStream = null;
+let selectedTaskType = 'riego';
+
+// ================================================
+// NAVIGATION
+// ================================================
+function goTo(id) {
+  const from = document.getElementById(currentScreen);
+  const to = document.getElementById(id);
+  from.classList.add('exit-left');
+  setTimeout(() => { from.classList.remove('active','exit-left'); }, 350);
+  to.classList.add('active');
+  screenHistory.push(currentScreen);
+  currentScreen = id;
+  if (id === 's5') renderCalendar();
+  if (id === 's6') renderMyPlants();
+}
+
+function goBack() {
+  if (screenHistory.length === 0) return;
+  const prev = screenHistory.pop();
+  const from = document.getElementById(currentScreen);
+  const to = document.getElementById(prev);
+  from.style.transform = 'translateX(100%)';
+  from.style.opacity = '0';
+  setTimeout(() => {
+    from.classList.remove('active');
+    from.style.transform = '';
+    from.style.opacity = '';
+  }, 350);
+  to.classList.add('active');
+  currentScreen = prev;
+}
+
+// ================================================
+// AUTH
+// ================================================
+function switchTab(tab) {
+  document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+  document.getElementById('tab-reg').classList.toggle('active', tab === 'reg');
+  document.getElementById('panel-login').classList.toggle('active', tab === 'login');
+  document.getElementById('panel-reg').classList.toggle('active', tab === 'reg');
+}
+
+function doLogin() {
+  const user = document.getElementById('login-user').value.trim();
+  const pass = document.getElementById('login-pass').value.trim();
+  if (!user || !pass) { showToast('⚠️ Completa todos los campos'); return; }
+
+  const rows = dbQuery(
+    'SELECT * FROM users WHERE (username = ? OR email = ?) AND password = ?',
+    [user, user, pass]
+  );
+  if (rows.length === 0) { showToast('❌ Usuario o contraseña incorrectos'); return; }
+  currentUser = rows[0];
+  showToast('✅ ¡Bienvenido, ' + currentUser.name + '!');
+  setTimeout(() => goTo('s3'), 800);
+}
+
+function doRegister() {
+  const name = document.getElementById('reg-name').value.trim();
+  const user = document.getElementById('reg-user').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pass = document.getElementById('reg-pass').value.trim();
+  if (!name || !user || !email || !pass) { showToast('⚠️ Completa todos los campos'); return; }
+  if (pass.length < 6) { showToast('⚠️ Contraseña mínimo 6 caracteres'); return; }
+
+  try {
+    dbRun('INSERT INTO users (name, username, email, password) VALUES (?, ?, ?, ?)', [name, user, email, pass]);
+    const rows = dbQuery('SELECT * FROM users WHERE username = ?', [user]);
+    currentUser = rows[0];
+    showToast('🎉 ¡Cuenta creada! Bienvenido, ' + name);
+    setTimeout(() => goTo('s3'), 800);
+  } catch (e) {
+    showToast('❌ Usuario o email ya registrado');
+  }
+}
+
+// ================================================
+// CAMERA & IMAGE
+// ================================================
+async function openCamera() {
+  try {
+    cameraStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment', width: 640, height: 480 }
+    });
+    const video = document.getElementById('camera-feed');
+    video.srcObject = cameraStream;
+    video.style.display = 'block';
+    document.getElementById('scan-placeholder').style.display = 'none';
+    document.getElementById('plant-preview').style.display = 'none';
+
+    // Capture button prompt
+    showToast('📷 Cámara activa - Toca "Cámara" para capturar');
+    // On second tap of camera btn, capture
+    document.querySelector('.btn-camera').onclick = capturePhoto;
+  } catch (e) {
+    showToast('📷 Cámara no disponible. Usa Galería');
+  }
+}
+
+function capturePhoto() {
+  const video = document.getElementById('camera-feed');
+  const canvas = document.getElementById('camera-canvas');
+  canvas.width = video.videoWidth || 640;
+  canvas.height = video.videoHeight || 480;
+  canvas.getContext('2d').drawImage(video, 0, 0);
+  const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+  stopCamera();
+  showPlantPreview(dataUrl);
+  analyzeWithAI(dataUrl);
+  // Reset camera button
+  document.querySelector('.btn-camera').onclick = openCamera;
+}
+
+function stopCamera() {
+  if (cameraStream) { cameraStream.getTracks().forEach(t => t.stop()); cameraStream = null; }
+  document.getElementById('camera-feed').style.display = 'none';
+}
+
+function handleFileUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    showPlantPreview(ev.target.result);
+    analyzeWithAI(ev.target.result);
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+function showPlantPreview(dataUrl) {
+  currentPlantImageData = dataUrl;
+  const preview = document.getElementById('plant-preview');
+  preview.src = dataUrl;
+  preview.style.display = 'block';
+  document.getElementById('scan-placeholder').style.display = 'none';
+  document.getElementById('camera-feed').style.display = 'none';
+}
+
+// ================================================
+// AI ANALYSIS VIA ANTHROPIC API
+// ================================================
+async function analyzeWithAI(imageDataUrl) {
+  const bar = document.getElementById('analyzing-bar');
+  const fill = document.getElementById('progress-fill');
+  bar.classList.add('show');
+
+  // Animate progress
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress = Math.min(progress + Math.random() * 8, 92);
+    fill.style.width = progress + '%';
+  }, 200);
+
+  // Extract base64
+  const base64 = imageDataUrl.split(',')[1];
+  const mediaType = imageDataUrl.split(';')[0].split(':')[1] || 'image/jpeg';
+
+  const prompt = `Analiza esta imagen de una planta y proporciona información detallada. Responde SOLO en JSON válido con esta estructura exacta:
+{
+  "common_name": "Nombre común de la planta en español",
+  "scientific_name": "Nombre científico",
+  "description": "Descripción de 2-3 oraciones sobre la planta, su origen y características",
+  "riego": "Frecuencia de riego (ej: Moderado, Abundante, Escaso)",
+  "luz": "Tipo de luz necesaria (ej: Indirecta brillante, Directa, Semi-sombra)",
+  "temperatura": "Rango ideal (ej: 18-27°C)",
+  "humedad": "Nivel de humedad (ej: Alta, Media, Baja)",
+  "tips": ["consejo1", "consejo2", "consejo3", "consejo4"],
+  "problems": ["problema1: solución", "problema2: solución", "problema3: solución"],
+  "watering_schedule": {
+    "frequency_days": 7,
+    "amount_ml": 200,
+    "notes": "Usa agua filtrada o dejada reposar"
+  },
+  "pruning_days": 30,
+  "sun_hours": 4,
+  "review_days": 14
+}
+Si no puedes identificar la planta con certeza, usa "Planta no identificada" y proporciona cuidados generales.`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: mediaType, data: base64 } },
+            { type: 'text', text: prompt }
+          ]
+        }]
+      })
+    });
+
+    const data = await response.json();
+    clearInterval(interval);
+    fill.style.width = '100%';
+
+    let text = '';
+    if (data.content && data.content[0]) text = data.content[0].text || '';
+
+    // Parse JSON from response
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('No JSON found');
+    currentPlantData = JSON.parse(jsonMatch[0]);
+
+    setTimeout(() => {
+      bar.classList.remove('show');
+      fill.style.width = '0%';
+      populatePlantDetail();
+      goTo('s4');
+    }, 400);
+
+  } catch (err) {
+    clearInterval(interval);
+    bar.classList.remove('show');
+    fill.style.width = '0%';
+    showToast('⚠️ Error al analizar. Mostrando datos de ejemplo');
+    currentPlantData = getSamplePlant();
+    populatePlantDetail();
+    goTo('s4');
+  }
+}
+
+function getSamplePlant() {
+  return {
+    common_name: "Monstera Deliciosa",
+    scientific_name: "Monstera deliciosa",
+    description: "Originaria de las selvas tropicales de América, es conocida por sus hojas grandes y perforadas. Perfecta para interiores brillantes con luz indirecta.",
+    riego: "Moderado", luz: "Indirecta brillante", temperatura: "18-27°C", humedad: "Alta",
+    tips: [
+      "Limpia las hojas con un paño húmedo para evitar el polvo",
+      "No dejes que el agua se estanque en el platillo",
+      "Fertiliza cada mes durante primavera-verano",
+      "Gírala cada 2 semanas para un crecimiento uniforme"
+    ],
+    problems: [
+      "Hojas amarillas: exceso de riego, reduce la frecuencia",
+      "Puntas marrones: baja humedad, rocía agua regularmente",
+      "Plagas de araña: limpia con agua jabonosa suave"
+    ],
+    watering_schedule: { frequency_days: 7, amount_ml: 200, notes: "Usa agua filtrada a temperatura ambiente" },
+    pruning_days: 30, sun_hours: 4, review_days: 14
+  };
+}
+
+// ================================================
+// PLANT DETAIL SCREEN
+// ================================================
+function populatePlantDetail() {
+  const p = currentPlantData;
+  document.getElementById('s4-common').textContent = p.common_name || 'Planta';
+  document.getElementById('s4-sci').textContent = p.scientific_name || '';
+  document.getElementById('s4-desc').textContent = p.description || '';
+  document.getElementById('chip-riego').textContent = p.riego || '—';
+  document.getElementById('chip-luz').textContent = p.luz || '—';
+  document.getElementById('chip-temp').textContent = p.temperatura || '—';
+  document.getElementById('chip-hum').textContent = p.humedad || '—';
+
+  if (currentPlantImageData) {
+    document.getElementById('s4-img').src = currentPlantImageData;
+  }
+
+  // Tips
+  const tipsList = document.getElementById('s4-tips');
+  tipsList.innerHTML = (p.tips || []).map(t =>
+    `<li><span class="tip-bullet">✓</span>${t}</li>`
+  ).join('');
+
+  // Problems
+  const probList = document.getElementById('s4-problems');
+  probList.innerHTML = (p.problems || []).map(t =>
+    `<li><span class="tip-bullet">⚠</span>${t}</li>`
+  ).join('');
+}
+
+function savePlant() {
+  if (!currentUser) { showToast('⚠️ Inicia sesión primero'); return; }
+  if (!currentPlantData) return;
+  const p = currentPlantData;
+  try {
+    dbRun(
+      `INSERT INTO plants (user_id, common_name, scientific_name, description, riego, luz, temperatura, humedad, tips, problems, image_data)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        currentUser.id, p.common_name, p.scientific_name, p.description,
+        p.riego, p.luz, p.temperatura, p.humedad,
+        JSON.stringify(p.tips || []),
+        JSON.stringify(p.problems || []),
+        currentPlantImageData || ''
+      ]
+    );
+
+    // Auto-generate tasks for next 30 days
+    const plantRows = dbQuery('SELECT id FROM plants WHERE user_id = ? ORDER BY id DESC LIMIT 1', [currentUser.id]);
+    if (plantRows.length && p.watering_schedule) {
+      const plantId = plantRows[0].id;
+      const today = new Date();
+      const freq = p.watering_schedule.frequency_days || 7;
+      const pruneFreq = p.pruning_days || 30;
+      const reviewFreq = p.review_days || 14;
+
+      for (let i = 0; i <= 30; i++) {
+        const d = new Date(today);
+        d.setDate(d.getDate() + i);
+        const ds = d.toISOString().split('T')[0];
+
+        if (i % freq === 0) {
+          dbRun(`INSERT INTO tasks (user_id, plant_id, date, time, type, title, description) VALUES (?,?,?,?,?,?,?)`,
+            [currentUser.id, plantId, ds, '09:00', 'riego',
+             `Regar ${p.common_name}`,
+             `${p.watering_schedule.amount_ml || 200}ml. ${p.watering_schedule.notes || ''}`]);
+        }
+        if (i > 0 && i % pruneFreq === 0) {
+          dbRun(`INSERT INTO tasks (user_id, plant_id, date, time, type, title, description) VALUES (?,?,?,?,?,?,?)`,
+            [currentUser.id, plantId, ds, '10:00', 'poda', `Podar ${p.common_name}`, 'Elimina hojas secas o dañadas']);
+        }
+        if (i > 0 && i % reviewFreq === 0) {
+          dbRun(`INSERT INTO tasks (user_id, plant_id, date, time, type, title, description) VALUES (?,?,?,?,?,?,?)`,
+            [currentUser.id, plantId, ds, '11:00', 'revision', `Revisar ${p.common_name}`, 'Verifica humedad del suelo y plagas']);
+        }
+      }
+    }
+
+    showToast('🌱 ¡Planta guardada con tareas!');
+    setTimeout(() => goTo('s6'), 800);
+  } catch (e) {
+    showToast('❌ Error al guardar: ' + e.message);
+  }
+}
+
+// ================================================
+// MY PLANTS SCREEN
+// ================================================
+function renderMyPlants() {
+  const grid = document.getElementById('plant-grid');
+  if (!currentUser) {
+    grid.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🔐</div><div class="empty-state-text">Inicia sesión</div><div class="empty-state-sub">para ver tus plantas</div></div>`;
+    return;
+  }
+  const plants = dbQuery('SELECT * FROM plants WHERE user_id = ? ORDER BY id DESC', [currentUser.id]);
+  if (plants.length === 0) {
+    grid.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🌱</div><div class="empty-state-text">Aún no tienes plantas</div><div class="empty-state-sub">Escanea tu primera planta con la cámara</div></div>`;
+    return;
+  }
+  grid.innerHTML = plants.map(p => `
+    <div class="plant-item" onclick="viewSavedPlant(${p.id})">
+      <div class="plant-thumb">
+        ${p.image_data ? `<img src="${p.image_data}" alt="${p.common_name}">` : '🌿'}
+      </div>
+      <div class="plant-info">
+        <div class="plant-common">${p.common_name}</div>
+        <div class="plant-sci-small">${p.scientific_name || ''}</div>
+        <div class="plant-date">📅 Agregada: ${p.added_at ? p.added_at.split(' ')[0] : ''}</div>
+      </div>
+      <div class="plant-arrow">›</div>
+    </div>
+  `).join('');
+}
+
+function viewSavedPlant(id) {
+  const rows = dbQuery('SELECT * FROM plants WHERE id = ?', [id]);
+  if (!rows.length) return;
+  const p = rows[0];
+  currentPlantData = {
+    common_name: p.common_name, scientific_name: p.scientific_name,
+    description: p.description, riego: p.riego, luz: p.luz,
+    temperatura: p.temperatura, humedad: p.humedad,
+    tips: JSON.parse(p.tips || '[]'),
+    problems: JSON.parse(p.problems || '[]')
+  };
+  currentPlantImageData = p.image_data || null;
+  populatePlantDetail();
+  goTo('s4');
+}
+
+// ================================================
+// CALENDAR
+// ================================================
+const MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const DAYS = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+
+function initCalendar() {
+  const now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth();
+  selectedDate = now.toISOString().split('T')[0];
+}
+
+function changeMonth(dir) {
+  calMonth += dir;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const label = document.getElementById('cal-month-label');
+  label.textContent = MONTHS[calMonth] + ' ' + calYear;
+
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+
+  // Day headers
+  DAYS.forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'cal-dow';
+    el.textContent = d;
+    grid.appendChild(el);
+  });
+
+  const first = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const today = new Date().toISOString().split('T')[0];
+
+  // Get task dates for this month
+  const monthStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}`;
+  let taskDates = new Set();
+  if (currentUser) {
+    const rows = dbQuery(
+      `SELECT DISTINCT date FROM tasks WHERE user_id = ? AND date LIKE ?`,
+      [currentUser.id, monthStr + '%']
+    );
+    rows.forEach(r => taskDates.add(r.date));
+  }
+
+  // Empty slots before first
+  for (let i = 0; i < first; i++) {
+    const el = document.createElement('div');
+    el.className = 'cal-day other-month';
+    grid.appendChild(el);
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const ds = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const el = document.createElement('div');
+    el.className = 'cal-day';
+    if (ds === today) el.classList.add('today');
+    if (ds === selectedDate) el.classList.add('selected');
+    if (taskDates.has(ds)) el.classList.add('has-task');
+    el.textContent = d;
+    el.onclick = () => selectDay(ds, el);
+    grid.appendChild(el);
+  }
+
+  renderTasks();
+}
+
+function selectDay(ds, el) {
+  selectedDate = ds;
+  document.querySelectorAll('.cal-day.selected').forEach(e => e.classList.remove('selected'));
+  if (!el.classList.contains('today')) el.classList.add('selected');
+  renderTasks();
+}
+
+function renderTasks() {
+  const list = document.getElementById('tasks-list');
+  const countEl = document.getElementById('task-count');
+
+  if (!currentUser) {
+    list.innerHTML = '<div style="text-align:center; color:var(--text-light); padding:20px;">Inicia sesión para ver tareas</div>';
+    countEl.textContent = '0';
+    return;
+  }
+
+  const tasks = dbQuery(
+    `SELECT * FROM tasks WHERE user_id = ? AND date = ? ORDER BY time ASC`,
+    [currentUser.id, selectedDate]
+  );
+  countEl.textContent = tasks.length;
+
+  if (tasks.length === 0) {
+    list.innerHTML = '<div style="text-align:center; color:var(--text-light); padding:20px; font-size:14px;">Sin tareas para este día 🌿</div>';
+    return;
+  }
+
+  const icons = { riego:'💧', poda:'✂️', sol:'☀️', revision:'🔍', abono:'🌿' };
+  const titles = { riego:'Riego', poda:'Poda', sol:'Exposición solar', revision:'Revisión', abono:'Abono' };
+
+  list.innerHTML = tasks.map(t => `
+    <div class="task-card type-${t.type}" id="task-${t.id}">
+      <div class="task-icon-wrap">${icons[t.type] || '📋'}</div>
+      <div class="task-info">
+        <div class="task-time">🕐 ${t.time || '09:00'}</div>
+        <div class="task-title">${t.title || titles[t.type]}</div>
+        <div class="task-desc">${t.description || ''}</div>
+      </div>
+      <button class="task-check ${t.done ? 'done' : ''}" onclick="toggleTask(${t.id})">
+        ${t.done ? '✓' : ''}
+      </button>
+    </div>
+  `).join('');
+}
+
+function toggleTask(id) {
+  const rows = dbQuery('SELECT done FROM tasks WHERE id = ?', [id]);
+  if (!rows.length) return;
+  const newDone = rows[0].done ? 0 : 1;
+  dbRun('UPDATE tasks SET done = ? WHERE id = ?', [newDone, id]);
+  renderTasks();
+  renderCalendar();
+  showToast(newDone ? '✅ Tarea completada' : '↩️ Tarea pendiente');
+}
+
+// ================================================
+// ADD TASK MODAL
+// ================================================
+function openAddTask() {
+  document.getElementById('modal-task').classList.add('show');
+}
+function closeAddTask() {
+  document.getElementById('modal-task').classList.remove('show');
+}
+function closeModal(e) {
+  if (e.target.id === 'modal-task') closeAddTask();
+}
+function selectType(btn) {
+  document.querySelectorAll('.type-chip').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedTaskType = btn.dataset.type;
+}
+
+const taskTitles = { riego:'Regar planta', poda:'Podar planta', sol:'Exposición solar', revision:'Revisar planta', abono:'Abonar planta' };
+
+function saveTask() {
+  if (!currentUser) { showToast('⚠️ Inicia sesión primero'); return; }
+  const desc = document.getElementById('task-desc-input').value.trim();
+  const time = document.getElementById('task-time-input').value;
+
+  dbRun(
+    `INSERT INTO tasks (user_id, date, time, type, title, description) VALUES (?,?,?,?,?,?)`,
+    [currentUser.id, selectedDate, time, selectedTaskType,
+     taskTitles[selectedTaskType] || 'Tarea',
+     desc || 'Cuidado de planta']
+  );
+  closeAddTask();
+  renderCalendar();
+  document.getElementById('task-desc-input').value = '';
+  showToast('✅ Tarea guardada');
+}
+
+// ================================================
+// TOAST
+// ================================================
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ================================================
+// INIT
+// ================================================
+(async () => {
+  try {
+    await initDB();
+    initCalendar();
+    // Load demo account for easy testing
+    const existing = dbQuery("SELECT id FROM users WHERE username='demo'");
+    if (existing.length === 0) {
+      dbRun("INSERT INTO users (name, username, email, password) VALUES ('Demo User','demo','demo@riegomax.com','demo123')");
+    }
+    showToast('🌱 Base de datos lista');
+  } catch(e) {
+    console.error('DB init error:', e);
+    showToast('⚠️ Usando modo offline');
+  }
+})();
+</script>
+</body>
+</html>
