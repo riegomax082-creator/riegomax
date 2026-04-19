@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Riego Max</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gd: #1a6b3a; --gm: #2d9e5f; --gl: #5bc98a;
+  --gp: #d4f0e1; --gu: #edf9f2; --ba: #3db8e8;
+  --td: #1a2e22; --tm: #3a5c44; --tl: #6b8c73;
+  --sh: 0 8px 32px rgba(29,107,58,0.18);
+  --r: 20px; --tr: all 0.32s cubic-bezier(0.4,0,0.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif;background:var(--gu)}
+.phone{width:100vw;height:100vh;position:relative;overflow:hidden;background:var(--gu)}
+
+/* ── SCREENS ── */
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;transform:translateX(100%);
+  transition:var(--tr);overflow-y:auto;overflow-x:hidden}
+.scr.on{opacity:1;pointer-events:all;transform:translateX(0)}
+.scr.out{opacity:0;transform:translateX(-100%)}
+
+/* ── HEADER BASE ── */
+.hdr{background:linear-gradient(135deg,var(--gd),var(--gm));
+  padding:48px 22px 22px;border-radius:0 0 28px 28px;
+  box-shadow:var(--sh);color:#fff}
+.hdr-title{font-family:'Playfair Display',serif;font-size:22px}
+.hdr-sub{font-size:12px;opacity:.75;font-weight:600;margin-top:3px}
+.back-btn{background:rgba(255,255,255,.2);border:none;color:#fff;
+  padding:7px 13px;border-radius:9px;font-family:'Nunito',sans-serif;
+  font-weight:700;cursor:pointer;font-size:13px;margin-bottom:10px;display:inline-flex;align-items:center;gap:5px}
+
+/* ── LOGIN SCREEN ── */
+#s1{background:linear-gradient(160deg,#e8f5ed,#c8ebd6,#a8dbc0)}
+.s1-hdr{background:linear-gradient(135deg,var(--gd),var(--gm));
+  padding:44px 22px 32px;border-radius:0 0 36px 36px;
+  box-shadow:var(--sh);text-align:center;position:relative}
+.logo-c{width:66px;height:66px;background:#fff;border-radius:50%;
+  margin:0 auto 10px;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 18px rgba(0,0,0,.2)}
+.logo-c svg{width:48px;height:48px}
+.app-title{font-family:'Playfair Display',serif;font-size:27px;color:#fff;letter-spacing:2px}
+.app-sub{color:var(--gp);font-size:12px;margin-top:3px;font-weight:600;letter-spacing:.8px}
+.s1-body{padding:26px 22px 20px;flex:1}
+.wlc{font-size:21px;font-weight:800;color:var(--gd);margin-bottom:4px}
+.wlc-s{color:var(--tl);font-size:13px;margin-bottom:20px}
+.tabs{display:flex;background:rgba(255,255,255,.6);border-radius:13px;
+  padding:4px;margin-bottom:22px;backdrop-filter:blur(8px)}
+.tab-btn{flex:1;padding:10px;border:none;background:transparent;
+  border-radius:9px;font-family:'Nunito',sans-serif;font-weight:700;
+  font-size:13px;color:var(--tl);cursor:pointer;transition:var(--tr)}
+.tab-btn.on{background:var(--gd);color:#fff;box-shadow:0 4px 12px rgba(26,107,58,.3)}
+.fg{margin-bottom:14px}
+.fl{font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;
+  letter-spacing:.7px;margin-bottom:5px;display:block}
+.fi{width:100%;padding:13px 15px;border:2px solid rgba(45,158,95,.2);
+  border-radius:13px;background:rgba(255,255,255,.8);font-family:'Nunito',sans-serif;
+  font-size:14px;color:var(--td);outline:none;transition:var(--tr)}
+.fi:focus{border-color:var(--gm);background:#fff;box-shadow:0 0 0 4px rgba(45,158,95,.1)}
+.btn-p{width:100%;padding:15px;background:linear-gradient(135deg,var(--gm),var(--gd));
+  color:#fff;border:none;border-radius:15px;font-family:'Nunito',sans-serif;
+  font-size:15px;font-weight:800;cursor:pointer;letter-spacing:.4px;
+  transition:var(--tr);box-shadow:0 6px 18px rgba(26,107,58,.35);margin-top:6px}
+.btn-p:active{transform:scale(.97)}
+.lnk{text-align:center;margin-top:12px;font-size:12px;color:var(--tl)}
+.lnk a{color:var(--gd);font-weight:700;text-decoration:none}
+.btn-q{width:100%;padding:13px;background:rgba(255,255,255,.7);
+  color:var(--gd);border:2px solid rgba(45,158,95,.3);border-radius:15px;
+  font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;
+  margin-top:9px;transition:var(--tr);display:flex;align-items:center;justify-content:center;gap:7px}
+.fp{display:none}.fp.on{display:block}
+
+/* ── QUIENES SOMOS ── */
+.info-card{background:#fff;border-radius:var(--r);padding:18px;margin-bottom:14px;
+  box-shadow:0 4px 14px rgba(26,107,58,.1)}
+.info-card h3{color:var(--gd);font-size:15px;font-weight:800;margin-bottom:8px;
+  display:flex;align-items:center;gap:7px}
+.info-card p{color:var(--tm);font-size:13px;line-height:1.6}
+.oi{display:flex;align-items:flex-start;gap:9px;margin-bottom:9px}
+.od{width:27px;height:27px;min-width:27px;background:var(--gp);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:13px}
+.cr{display:flex;align-items:center;gap:9px;padding:9px 0;
+  border-bottom:1px solid var(--gp);color:var(--tm);font-size:13px;font-weight:600}
+.cr:last-child{border-bottom:none}
+.ci{width:34px;height:34px;background:var(--gp);border-radius:9px;
+  display:flex;align-items:center;justify-content:center;font-size:17px}
+
+/* ── SCANNER ── */
+#s3{background:linear-gradient(160deg,#e8f5ed,#c8ebd6)}
+.scan-body{flex:1;display:flex;flex-direction:column;align-items:center;padding:20px}
+.scan-ph{width:100%;max-width:310px;height:290px;border-radius:22px;
+  background:linear-gradient(135deg,var(--gd),var(--gm));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:0 8px 36px rgba(26,107,58,.3);margin-bottom:18px;cursor:pointer;
+  position:relative;overflow:hidden}
+.scan-ph::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.08),transparent)}
+.scan-frm{width:155px;height:155px;position:relative}
+.sc{position:absolute;width:26px;height:26px;border-color:#fff;border-style:solid;border-width:0}
+.sc.tl{top:0;left:0;border-top-width:3px;border-left-width:3px;border-radius:5px 0 0 0}
+.sc.tr{top:0;right:0;border-top-width:3px;border-right-width:3px;border-radius:0 5px 0 0}
+.sc.bl{bottom:0;left:0;border-bottom-width:3px;border-left-width:3px;border-radius:0 0 0 5px}
+.sc.br{bottom:0;right:0;border-bottom-width:3px;border-right-width:3px;border-radius:0 0 5px 0}
+.sl{position:absolute;left:18px;right:18px;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gl),transparent);
+  top:50%;animation:scanM 2s ease-in-out infinite}
+@keyframes scanM{0%,100%{transform:translateY(-68px);opacity:.5}50%{transform:translateY(68px);opacity:1}}
+.scan-txt{color:rgba(255,255,255,.9);font-size:14px;font-weight:700;margin-top:14px}
+.scan-sub{color:rgba(255,255,255,.6);font-size:12px;margin-top:5px}
+#plant-prev{display:none;width:100%;max-width:310px;height:290px;border-radius:22px;
+  object-fit:cover;margin-bottom:18px;box-shadow:0 8px 36px rgba(26,107,58,.3)}
+.scan-acts{display:flex;gap:10px;width:100%;max-width:310px}
+.sab{flex:1;padding:13px;border:none;border-radius:15px;font-family:'Nunito',sans-serif;
+  font-size:14px;font-weight:700;cursor:pointer;transition:var(--tr);
+  display:flex;align-items:center;justify-content:center;gap:7px}
+.sab:active{transform:scale(.97)}
+.btn-cam{background:linear-gradient(135deg,var(--gm),var(--gd));color:#fff;
+  box-shadow:0 4px 14px rgba(26,107,58,.3)}
+.btn-gal{background:#fff;color:var(--gd);border:2px solid var(--gp)}
+.anal-bar{width:100%;max-width:310px;background:#fff;border-radius:15px;
+  padding:14px;margin-top:14px;box-shadow:0 4px 14px rgba(26,107,58,.1);display:none}
+.anal-bar.show{display:block}
+.al{font-weight:700;font-size:13px;color:var(--gd);margin-bottom:9px;
+  display:flex;align-items:center;gap:7px}
+.pt{height:7px;background:var(--gp);border-radius:4px;overflow:hidden}
+.pf{height:100%;background:linear-gradient(90deg,var(--gm),var(--gl));
+  border-radius:4px;width:0%;transition:width .1s linear}
+.spin{width:18px;height:18px;border:3px solid rgba(26,107,58,.2);
+  border-top-color:var(--gd);border-radius:50%;animation:sp .7s linear infinite;display:inline-block}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* ── PLANT DETAIL ── */
+#s4{background:linear-gradient(160deg,#e8f5ed,#c8ebd6)}
+.s4-hero{position:relative;height:210px;overflow:hidden;border-radius:0 0 28px 28px}
+.s4-img{width:100%;height:100%;object-fit:cover;display:block}
+.s4-ov{position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(26,107,58,.55) 0%,rgba(26,107,58,.15) 50%,transparent 100%);
+  display:flex;flex-direction:column;justify-content:flex-end;padding:18px}
+.s4-nm{font-family:'Playfair Display',serif;font-size:24px;color:#fff;
+  text-shadow:0 2px 8px rgba(0,0,0,.3)}
+.s4-sc{color:rgba(255,255,255,.82);font-style:italic;font-size:13px}
+.s4-bk{position:absolute;top:46px;left:14px;background:rgba(255,255,255,.22);
+  border:none;color:#fff;padding:7px 13px;border-radius:9px;
+  font-family:'Nunito',sans-serif;font-weight:700;font-size:13px;cursor:pointer;backdrop-filter:blur(6px)}
+.s4-body{padding:18px}
+.chips{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px}
+.chip{display:flex;flex-direction:column;align-items:center;background:#fff;
+  border-radius:15px;padding:11px 14px;box-shadow:0 4px 10px rgba(26,107,58,.09);
+  flex:1;min-width:75px}
+.chip-ic{font-size:20px;margin-bottom:3px}
+.chip-lb{font-size:9px;font-weight:700;color:var(--tl);text-transform:uppercase;letter-spacing:.5px}
+.chip-vl{font-size:11px;font-weight:800;color:var(--gd);margin-top:2px}
+.dc{background:#fff;border-radius:var(--r);padding:16px;margin-bottom:12px;
+  box-shadow:0 4px 10px rgba(26,107,58,.07)}
+.dc h4{color:var(--gd);font-size:14px;font-weight:800;margin-bottom:8px;
+  display:flex;align-items:center;gap:7px}
+.dc p{color:var(--tm);font-size:13px;line-height:1.6}
+.tl-list{list-style:none}
+.tl-list li{padding:5px 0;border-bottom:1px solid var(--gp);font-size:12px;
+  color:var(--tm);display:flex;gap:7px;align-items:flex-start}
+.tl-list li:last-child{border-bottom:none}
+.tb{color:var(--gm);font-weight:800;margin-top:2px}
+.s4-save{width:100%;padding:15px;background:linear-gradient(135deg,var(--gm),var(--gd));
+  color:#fff;border:none;border-radius:15px;font-family:'Nunito',sans-serif;
+  font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 6px 18px rgba(26,107,58,.35);
+  margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:9px;transition:var(--tr)}
+.s4-save:active{transform:scale(.97)}
+
+/* ── CALENDAR ── */
+#s5{background:linear-gradient(160deg,#e8f5ed,#c8ebd6)}
+.cal-wrap{background:#fff;border-radius:var(--r);margin:14px;padding:15px;
+  box-shadow:0 4px 14px rgba(26,107,58,.1)}
+.cal-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.cnb{width:32px;height:32px;background:var(--gp);border:none;border-radius:9px;
+  font-size:15px;cursor:pointer;color:var(--gd);font-weight:800}
+.cm{font-weight:800;font-size:15px;color:var(--gd)}
+.cgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cdow{text-align:center;font-size:10px;font-weight:700;color:var(--tl);padding:3px 0;text-transform:uppercase}
+.cday{text-align:center;padding:6px 2px;border-radius:9px;font-size:12px;
+  font-weight:600;color:var(--td);cursor:pointer;position:relative;transition:var(--tr);min-height:28px}
+.cday.om{color:var(--tl);opacity:.35}
+.cday.td{background:var(--gd);color:#fff;font-weight:800}
+.cday.sel{background:var(--gm);color:#fff}
+.cday.ht::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);
+  width:4px;height:4px;border-radius:50%;background:var(--ba)}
+.cday.td.ht::after{background:#fff}
+.cday:hover:not(.td){background:var(--gp)}
+.tasks-sec{margin:0 14px 14px}
+.tasks-hdr{font-size:14px;font-weight:800;color:var(--gd);margin-bottom:10px;
+  display:flex;align-items:center;gap:7px}
+.tbadge{background:var(--gd);color:#fff;font-size:10px;padding:2px 7px;border-radius:7px}
+.task-c{background:#fff;border-radius:15px;padding:13px;margin-bottom:9px;
+  box-shadow:0 3px 10px rgba(26,107,58,.07);display:flex;gap:11px;align-items:flex-start;
+  position:relative;overflow:hidden}
+.task-c::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px}
+.type-riego::before{background:var(--ba)}.type-poda::before{background:var(--gl)}
+.type-sol::before{background:#f5c842}.type-revision::before{background:#e8834a}
+.type-abono::before{background:#9b7fd4}.type-fertilizante::before{background:#c08050}
+.ti-wrap{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;
+  justify-content:center;font-size:20px;flex-shrink:0}
+.type-riego .ti-wrap{background:#e8f7fd}.type-poda .ti-wrap{background:var(--gp)}
+.type-sol .ti-wrap{background:#fef9e7}.type-revision .ti-wrap{background:#fef0e8}
+.type-abono .ti-wrap{background:#f3effe}.type-fertilizante .ti-wrap{background:#fdf0e4}
+.ti-info{flex:1}
+.ti-time{font-size:10px;color:var(--tl);font-weight:700;margin-bottom:2px}
+.ti-title{font-size:13px;font-weight:800;color:var(--td);margin-bottom:3px}
+.ti-desc{font-size:11px;color:var(--tl);line-height:1.4}
+.tchk{width:25px;height:25px;border-radius:50%;border:2px solid var(--gp);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  flex-shrink:0;transition:var(--tr);background:transparent;font-size:12px;font-weight:800}
+.tchk.done{background:var(--gm);border-color:var(--gm);color:#fff}
+.add-task-btn{width:100%;padding:13px;border:2px dashed rgba(45,158,95,.3);
+  border-radius:15px;background:rgba(255,255,255,.6);color:var(--gd);
+  font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:7px;transition:var(--tr);margin-bottom:9px}
+.add-task-btn:active{transform:scale(.98)}
+.task-del{background:none;border:none;color:#e8834a;font-size:18px;cursor:pointer;padding:0 4px;flex-shrink:0}
+
+/* ── MY PLANTS ── */
+#s6{background:linear-gradient(160deg,#e8f5ed,#c8ebd6)}
+.plant-item{background:#fff;border-radius:var(--r);padding:13px;
+  display:flex;gap:12px;align-items:center;box-shadow:0 4px 10px rgba(26,107,58,.07);
+  cursor:pointer;transition:var(--tr);margin-bottom:10px}
+.plant-item:active{transform:scale(.98)}
+.pthumb{width:58px;height:58px;border-radius:13px;object-fit:cover;
+  background:var(--gp);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.pthumb img{width:58px;height:58px;border-radius:13px;object-fit:cover}
+.pi-info{flex:1}
+.pi-nm{font-size:14px;font-weight:800;color:var(--td)}
+.pi-sc{font-size:11px;color:var(--tl);font-style:italic}
+.pi-dt{font-size:10px;color:var(--tl);margin-top:3px}
+.p-del{background:#fef0e8;border:none;border-radius:9px;padding:7px 10px;
+  color:#e8834a;font-size:14px;cursor:pointer;flex-shrink:0}
+.empty{text-align:center;padding:36px 18px;color:var(--tl)}
+.empty-ic{font-size:52px;margin-bottom:10px}
+.empty-tx{font-size:14px;font-weight:700;color:var(--tm);margin-bottom:5px}
+.empty-su{font-size:12px}
+
+/* ── NAVBAR ── */
+.nav-bar{display:flex;justify-content:space-around;align-items:center;
+  padding:10px 14px 18px;background:#fff;border-radius:22px 22px 0 0;
+  box-shadow:0 -4px 18px rgba(26,107,58,.11);position:sticky;bottom:0;z-index:10}
+.nb{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;
+  border:none;cursor:pointer;color:var(--tl);font-family:'Nunito',sans-serif;
+  font-size:10px;font-weight:700;transition:var(--tr)}
+.nb.on{color:var(--gd)}
+.nb-ic{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;
+  justify-content:center;font-size:21px;transition:var(--tr)}
+.nb.on .nb-ic{background:var(--gp)}
+
+/* ── MODAL ── */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;
+  display:none;align-items:flex-end;backdrop-filter:blur(4px)}
+.modal-ov.show{display:flex}
+.modal-sh{background:#fff;border-radius:22px 22px 0 0;width:100%;max-width:420px;
+  margin:0 auto;padding:22px;max-height:80vh;overflow-y:auto;animation:su .28s ease}
+@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.mh{width:38px;height:4px;background:#e0e0e0;border-radius:2px;margin:0 auto 18px}
+.mt{font-size:17px;font-weight:800;color:var(--gd);margin-bottom:18px}
+.mf{margin-bottom:14px}
+.ml{font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;
+  letter-spacing:.7px;margin-bottom:5px;display:block}
+.mi{width:100%;padding:11px 13px;border:2px solid var(--gp);border-radius:11px;
+  font-family:'Nunito',sans-serif;font-size:13px;color:var(--td);outline:none;background:var(--gu)}
+.mi:focus{border-color:var(--gm)}
+.mi select{width:100%}
+.type-sel{display:flex;gap:7px;flex-wrap:wrap}
+.tch{padding:7px 12px;border:2px solid var(--gp);border-radius:9px;font-family:'Nunito',sans-serif;
+  font-size:12px;font-weight:700;cursor:pointer;background:#fff;color:var(--tm);
+  display:flex;align-items:center;gap:5px;transition:var(--tr)}
+.tch.sel{border-color:var(--gm);background:var(--gp);color:var(--gd)}
+.mac{display:flex;gap:9px;margin-top:18px}
+.btn-can{flex:1;padding:13px;background:var(--gp);border:none;border-radius:13px;
+  font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--gd);cursor:pointer}
+.btn-st{flex:2;padding:13px;background:linear-gradient(135deg,var(--gm),var(--gd));border:none;
+  border-radius:13px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;
+  color:#fff;cursor:pointer;box-shadow:0 4px 12px rgba(26,107,58,.3)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);
+  background:var(--gd);color:#fff;padding:11px 22px;border-radius:50px;
+  font-size:13px;font-weight:700;z-index:200;opacity:0;pointer-events:none;
+  transition:opacity .3s;white-space:nowrap;max-width:90vw;text-align:center}
+.toast.show{opacity:1}
+
+/* ── PERFIL ── */
+#s7{background:linear-gradient(160deg,#e8f5ed,#c8ebd6)}
+.prof-avatar{width:80px;height:80px;border-radius:50%;background:var(--gp);
+  display:flex;align-items:center;justify-content:center;font-size:38px;
+  margin:0 auto 12px;border:3px solid var(--gm)}
+.prof-name{font-family:'Playfair Display',serif;font-size:20px;color:var(--gd);text-align:center}
+.prof-email{font-size:13px;color:var(--tl);text-align:center;margin-top:4px}
+.stat-row{display:flex;gap:12px;margin:18px 0}
+.stat-box{flex:1;background:#fff;border-radius:15px;padding:14px;text-align:center;
+  box-shadow:0 4px 10px rgba(26,107,58,.08)}
+.stat-n{font-size:22px;font-weight:800;color:var(--gd)}
+.stat-l{font-size:11px;color:var(--tl);font-weight:700}
+.btn-logout{width:100%;padding:14px;background:#fff;color:#e8834a;
+  border:2px solid #e8834a;border-radius:15px;font-family:'Nunito',sans-serif;
+  font-size:14px;font-weight:800;cursor:pointer;margin-top:10px}
+
+/* misc */
+#file-in{display:none}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:rgba(45,158,95,.25);border-radius:2px}
+</style>
+</head>
+<body>
+<div class="phone">
+
+<!-- ═══════════════════ S1 LOGIN ═══════════════════ -->
+<div class="scr on" id="s1">
+  <div class="s1-hdr">
+    <div class="logo-c">
+      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="48" fill="#edf9f2" stroke="#2d9e5f" stroke-width="2"/>
+        <rect x="47" y="34" width="6" height="38" rx="3" fill="#1a6b3a"/>
+        <circle cx="50" cy="27" r="5" fill="#3db8e8" opacity=".8"/>
+        <circle cx="41" cy="31" r="4" fill="#3db8e8" opacity=".6"/>
+        <circle cx="59" cy="31" r="4" fill="#3db8e8" opacity=".6"/>
+        <circle cx="34" cy="34" r="3" fill="#3db8e8" opacity=".4"/>
+        <circle cx="66" cy="34" r="3" fill="#3db8e8" opacity=".4"/>
+        <ellipse cx="38" cy="66" rx="22" ry="11" fill="#2d9e5f" opacity=".25"/>
+        <path d="M28 68 Q38 55 50 60 Q62 55 72 68" stroke="#2d9e5f" stroke-width="3" fill="none"/>
+      </svg>
+    </div>
+    <div class="app-title">RIEGO MAX</div>
+    <div class="app-sub">Sistema Inteligente de Plantas 🌿</div>
+  </div>
+  <div class="s1-body">
+    <div class="wlc">¡Bienvenido! 👋</div>
+    <div class="wlc-s">Cuida tus plantas con inteligencia artificial</div>
+    <div class="tabs">
+      <button class="tab-btn on" id="tl" onclick="swTab('l')">Iniciar Sesión</button>
+      <button class="tab-btn" id="tr" onclick="swTab('r')">Registrarse</button>
+    </div>
+    <!-- LOGIN -->
+    <div class="fp on" id="pl">
+      <div class="fg"><label class="fl">Usuario o Email</label>
+        <input class="fi" id="lu" type="text" placeholder="Tu usuario o correo" autocomplete="username"></div>
+      <div class="fg"><label class="fl">Contraseña</label>
+        <input class="fi" id="lp" type="password" placeholder="••••••••" autocomplete="current-password"></div>
+      <button class="btn-p" onclick="doLogin()">Iniciar Sesión 🚀</button>
+      <div class="lnk">¿No tienes cuenta? <a href="#" onclick="swTab('r')">Regístrate</a></div>
+    </div>
+    <!-- REGISTER -->
+    <div class="fp" id="pr">
+      <div class="fg"><label class="fl">Nombre completo</label>
+        <input class="fi" id="rn" type="text" placeholder="Tu nombre completo"></div>
+      <div class="fg"><label class="fl">Usuario</label>
+        <input class="fi" id="ru" type="text" placeholder="Elige un usuario" autocomplete="username"></div>
+      <div class="fg"><label class="fl">Email</label>
+        <input class="fi" id="re" type="email" placeholder="correo@ejemplo.com" autocomplete="email"></div>
+      <div class="fg"><label class="fl">Contraseña</label>
+        <input class="fi" id="rp" type="password" placeholder="Mínimo 6 caracteres" autocomplete="new-password"></div>
+      <button class="btn-p" onclick="doRegister()">Crear Cuenta ✨</button>
+    </div>
+    <button class="btn-q" onclick="go('s2')">🏢 ¿Quiénes somos?</button>
+  </div>
+</div>
+
+<!-- ═══════════════════ S2 QUIENES SOMOS ═══════════════════ -->
+<div class="scr" id="s2">
+  <div class="hdr">
+    <button class="back-btn" onclick="goBack()">← Volver</button>
+    <div class="hdr-title">Acerca de Riego Max</div>
+  </div>
+  <div style="padding:18px;overflow-y:auto;flex:1">
+    <div class="info-card">
+      <h3>🌱 Nuestra Misión</h3>
+      <p>Somos una empresa dedicada a ofrecer servicios de <strong>instalación y mantenimiento de sistemas de riego de alta calidad</strong>, adaptados a las necesidades del cliente. Combinamos tecnología con IA para cuidar cada planta.</p>
+    </div>
+    <div class="info-card">
+      <h3>🎯 Nuestros Objetivos</h3>
+      <div class="oi"><div class="od">💧</div><div>Proporcionar un servicio excepcional al cliente</div></div>
+      <div class="oi"><div class="od">♻️</div><div>Mantener prácticas sostenibles y eco-amigables</div></div>
+      <div class="oi"><div class="od">🤖</div><div>Integrar inteligencia artificial en el cuidado de plantas</div></div>
+      <div class="oi"><div class="od">📱</div><div>Innovar con tecnología accesible para todos</div></div>
+    </div>
+    <div class="info-card">
+      <h3>👥 Nuestro Equipo</h3>
+      <div class="oi"><div class="od">👩</div><div>Sixmary Silva</div></div>
+      <div class="oi"><div class="od">👩</div><div>Diana Silva</div></div>
+      <div class="oi"><div class="od">👨</div><div>Robney Ruiz</div></div>
+      <div class="oi"><div class="od">👨</div><div>Julio Sierra</div></div>
+    </div>
+    <div class="info-card">
+      <h3>📞 Contáctanos</h3>
+      <div class="cr"><div class="ci">📧</div>riegomax@empresa.com</div>
+      <div class="cr"><div class="ci">📱</div>+58 412-000-0000</div>
+      <div class="cr"><div class="ci">📍</div>Venezuela</div>
+    </div>
+    <button class="btn-p" onclick="go('s1')" style="margin-bottom:20px">Comenzar →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════ S3 SCANNER ═══════════════════ -->
+<div class="scr" id="s3">
+  <div class="hdr" style="text-align:center">
+    <div class="hdr-title">🔍 Escanear Planta</div>
+    <div class="hdr-sub">Enfoca bien la hoja principal</div>
+  </div>
+  <div class="scan-body">
+    <div class="scan-ph" id="scan-ph" onclick="openCam()">
+      <div class="scan-frm">
+        <div class="sc tl"></div><div class="sc tr"></div>
+        <div class="sc bl"></div><div class="sc br"></div>
+        <div class="sl"></div>
+      </div>
+      <div class="scan-txt">Toca para activar cámara</div>
+      <div class="scan-sub">o sube una foto desde galería</div>
+    </div>
+    <video id="cam-vid" autoplay playsinline
+      style="display:none;width:100%;max-width:310px;height:290px;border-radius:22px;
+             object-fit:cover;margin-bottom:18px;box-shadow:0 8px 36px rgba(26,107,58,.3)"></video>
+    <canvas id="cam-cvs" style="display:none"></canvas>
+    <img id="plant-prev" alt="Vista previa de planta">
+    <div class="scan-acts">
+      <button class="sab btn-cam" id="cam-btn" onclick="openCam()">📷 Cámara</button>
+      <button class="sab btn-gal" onclick="document.getElementById('file-in').click()">🖼️ Galería</button>
+    </div>
+    <input type="file" id="file-in" accept="image/*" onchange="handleFile(event)">
+    <div class="anal-bar" id="anal-bar">
+      <div class="al"><span class="spin"></span> Analizando con IA…</div>
+      <div class="pt"><div class="pf" id="pf"></div></div>
+    </div>
+  </div>
+  <div class="nav-bar">
+    <button class="nb" onclick="go('s6')"><div class="nb-ic">🌿</div>Mis Plantas</button>
+    <button class="nb on" onclick="go('s3')"><div class="nb-ic">📷</div>Escanear</button>
+    <button class="nb" onclick="go('s5')"><div class="nb-ic">📅</div>Calendario</button>
+    <button class="nb" onclick="go('s7')"><div class="nb-ic">👤</div>Perfil</button>
+  </div>
+</div>
+
+<!-- ═══════════════════ S4 PLANT DETAIL ═══════════════════ -->
+<div class="scr" id="s4">
+  <div class="s4-hero">
+    <img class="s4-img" id="s4-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='210'%3E%3Crect fill='%231a6b3a' width='400' height='210'/%3E%3C/svg%3E" alt="Planta">
+    <button class="s4-bk" onclick="goBack()">← Atrás</button>
+    <div class="s4-ov">
+      <div class="s4-nm" id="s4-nm">Cargando…</div>
+      <div class="s4-sc" id="s4-sc">Identificando especie…</div>
+    </div>
+  </div>
+  <div style="overflow-y:auto;flex:1">
+    <div class="s4-body">
+      <div class="chips">
+        <div class="chip"><div class="chip-ic">💧</div><div class="chip-lb">Riego</div><div class="chip-vl" id="c-ri">—</div></div>
+        <div class="chip"><div class="chip-ic">☀️</div><div class="chip-lb">Luz</div><div class="chip-vl" id="c-lu">—</div></div>
+        <div class="chip"><div class="chip-ic">🌡️</div><div class="chip-lb">Temp.</div><div class="chip-vl" id="c-tp">—</div></div>
+        <div class="chip"><div class="chip-ic">💨</div><div class="chip-lb">Humedad</div><div class="chip-vl" id="c-hm">—</div></div>
+      </div>
+      <div class="dc"><h4>📖 Sobre esta planta</h4><p id="s4-desc">—</p></div>
+      <div class="dc"><h4>💡 Consejos de Cuidado</h4><ul class="tl-list" id="s4-tips"></ul></div>
+      <div class="dc"><h4>⚠️ Posibles Problemas</h4><ul class="tl-list" id="s4-probs"></ul></div>
+      <button class="s4-save" onclick="savePlant()">🌱 Guardar en Mis Plantas</button>
+    </div>
+  </div>
+  <div class="nav-bar">
+    <button class="nb" onclick="go('s6')"><div class="nb-ic">🌿</div>Mis Plantas</button>
+    <button class="nb on" onclick="go('s3')"><div class="nb-ic">📷</div>Escanear</button>
+    <button class="nb" onclick="go('s5')"><div class="nb-ic">📅</div>Calendario</button>
+    <button class="nb" onclick="go('s7')"><div class="nb-ic">👤</div>Perfil</button>
+  </div>
+</div>
+
+<!-- ═══════════════════ S5 CALENDARIO ═══════════════════ -->
+<div class="scr" id="s5">
+  <div class="hdr">
+    <div class="hdr-title">📅 Calendario de Cuidados</div>
+    <div class="hdr-sub" id="s5-lbl">Programa de tareas para tus plantas</div>
+  </div>
+  <div style="overflow-y:auto;flex:1;padding-bottom:80px">
+    <div class="cal-wrap">
+      <div class="cal-nav">
+        <button class="cnb" onclick="chMo(-1)">‹</button>
+        <div class="cm" id="cm-lbl"></div>
+        <button class="cnb" onclick="chMo(1)">›</button>
+      </div>
+      <div class="cgrid" id="cgrid"></div>
+    </div>
+    <div class="tasks-sec">
+      <div class="tasks-hdr">Tareas del día <span class="tbadge" id="tk-cnt">0</span></div>
+      <div id="tk-list"></div>
+      <button class="add-task-btn" onclick="openModal()">➕ Agregar tarea</button>
+    </div>
+  </div>
+  <div class="nav-bar">
+    <button class="nb" onclick="go('s6')"><div class="nb-ic">🌿</div>Mis Plantas</button>
+    <button class="nb" onclick="go('s3')"><div class="nb-ic">📷</div>Escanear</button>
+    <button class="nb on" onclick="go('s5')"><div class="nb-ic">📅</div>Calendario</button>
+    <button class="nb" onclick="go('s7')"><div class="nb-ic">👤</div>Perfil</button>
+  </div>
+</div>
+
+<!-- ═══════════════════ S6 MIS PLANTAS ═══════════════════ -->
+<div class="scr" id="s6">
+  <div class="hdr">
+    <div class="hdr-title">🌿 Mis Plantas</div>
+    <div class="hdr-sub" id="s6-cnt"></div>
+  </div>
+  <div style="padding:16px;overflow-y:auto;flex:1;padding-bottom:80px" id="pg"></div>
+  <div class="nav-bar">
+    <button class="nb on" onclick="go('s6')"><div class="nb-ic">🌿</div>Mis Plantas</button>
+    <button class="nb" onclick="go('s3')"><div class="nb-ic">📷</div>Escanear</button>
+    <button class="nb" onclick="go('s5')"><div class="nb-ic">📅</div>Calendario</button>
+    <button class="nb" onclick="go('s7')"><div class="nb-ic">👤</div>Perfil</button>
+  </div>
+</div>
+
+<!-- ═══════════════════ S7 PERFIL ═══════════════════ -->
+<div class="scr" id="s7">
+  <div class="hdr"><div class="hdr-title">👤 Mi Perfil</div></div>
+  <div style="padding:22px;overflow-y:auto;flex:1">
+    <div class="prof-avatar" id="pav">👤</div>
+    <div class="prof-name" id="p-name">—</div>
+    <div class="prof-email" id="p-email">—</div>
+    <div class="stat-row">
+      <div class="stat-box"><div class="stat-n" id="st-pl">0</div><div class="stat-l">🌿 Plantas</div></div>
+      <div class="stat-box"><div class="stat-n" id="st-tk">0</div><div class="stat-l">✅ Tareas</div></div>
+      <div class="stat-box"><div class="stat-n" id="st-dn">0</div><div class="stat-l">🎯 Completadas</div></div>
+    </div>
+    <div class="dc">
+      <h4>⚙️ Opciones</h4>
+      <button class="btn-p" style="margin-bottom:10px" onclick="go('s3')">📷 Escanear Nueva Planta</button>
+      <button class="btn-p" style="background:linear-gradient(135deg,var(--ba),#1a7fa8);margin-bottom:10px" onclick="exportData()">📤 Exportar mis datos</button>
+      <button class="btn-logout" onclick="doLogout()">🚪 Cerrar Sesión</button>
+    </div>
+  </div>
+  <div class="nav-bar">
+    <button class="nb" onclick="go('s6')"><div class="nb-ic">🌿</div>Mis Plantas</button>
+    <button class="nb" onclick="go('s3')"><div class="nb-ic">📷</div>Escanear</button>
+    <button class="nb" onclick="go('s5')"><div class="nb-ic">📅</div>Calendario</button>
+    <button class="nb on" onclick="go('s7')"><div class="nb-ic">👤</div>Perfil</button>
+  </div>
+</div>
+
+<!-- ═══════════════════ MODAL TAREA ═══════════════════ -->
+<div class="modal-ov" id="mod-task" onclick="closeMod(event)">
+  <div class="modal-sh" onclick="event.stopPropagation()">
+    <div class="mh"></div>
+    <div class="mt">➕ Nueva Tarea de Cuidado</div>
+    <div class="mf">
+      <label class="ml">Tipo de tarea</label>
+      <div class="type-sel">
+        <button class="tch sel" data-tp="riego" onclick="selTp(this)">💧 Riego</button>
+        <button class="tch" data-tp="poda" onclick="selTp(this)">✂️ Poda</button>
+        <button class="tch" data-tp="sol" onclick="selTp(this)">☀️ Sol</button>
+        <button class="tch" data-tp="revision" onclick="selTp(this)">🔍 Revisión</button>
+        <button class="tch" data-tp="abono" onclick="selTp(this)">🌿 Abono</button>
+        <button class="tch" data-tp="fertilizante" onclick="selTp(this)">🪴 Fertiliz.</button>
+      </div>
+    </div>
+    <div class="mf">
+      <label class="ml">Descripción</label>
+      <input class="mi" id="td-in" type="text" placeholder="Ej: 200ml agua filtrada">
+    </div>
+    <div class="mf">
+      <label class="ml">Hora</label>
+      <input class="mi" id="tt-in" type="time" value="09:00">
+    </div>
+    <div class="mf">
+      <label class="ml">Planta (opcional)</label>
+      <select class="mi" id="tp-sel"></select>
+    </div>
+    <div class="mac">
+      <button class="btn-can" onclick="closeMod()">Cancelar</button>
+      <button class="btn-st" onclick="saveTask()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════════════════════
+  JAVASCRIPT — BASE DE DATOS localStorage JSON
+  Compatible con App Inventor WebViewer
+══════════════════════════════════════════════ -->
+<script>
+/* ══════════════════════════════════
+   DATABASE — localStorage JSON
+   (sql.js no funciona bien en App Inventor WebViewer;
+    usamos JSON en localStorage que es 100% compatible)
+══════════════════════════════════ */
+const DB_KEY = 'riegomax_v2';
+let DB = {users:[], plants:[], tasks:[], seq:{u:0,p:0,t:0}};
+
+function loadDB(){
+  try{
+    const raw = localStorage.getItem(DB_KEY);
+    if(raw) DB = JSON.parse(raw);
+  }catch(e){ console.error('DB load',e); }
+}
+function saveDB(){
+  try{ localStorage.setItem(DB_KEY, JSON.stringify(DB)); }
+  catch(e){ console.error('DB save',e); }
+}
+function nextId(tbl){
+  DB.seq[tbl] = (DB.seq[tbl]||0)+1;
+  return DB.seq[tbl];
+}
+
+/* ── USER CRUD ── */
+function dbAddUser(name,user,email,pass){
+  if(DB.users.find(u=>u.username===user||u.email===email)) throw new Error('duplicado');
+  const u={id:nextId('u'),name,username:user,email,password:pass,created:now()};
+  DB.users.push(u); saveDB(); return u;
+}
+function dbGetUser(userOrEmail,pass){
+  return DB.users.find(u=>(u.username===userOrEmail||u.email===userOrEmail)&&u.password===pass)||null;
+}
+
+/* ── PLANT CRUD ── */
+function dbAddPlant(uid,data,img){
+  const p={id:nextId('p'),user_id:uid,...data,image:img||'',added:now()};
+  DB.plants.push(p); saveDB(); return p;
+}
+function dbGetPlants(uid){ return DB.plants.filter(p=>p.user_id===uid); }
+function dbDeletePlant(id){
+  DB.plants = DB.plants.filter(p=>p.id!==id);
+  DB.tasks  = DB.tasks.filter(t=>t.plant_id!==id);
+  saveDB();
+}
+
+/* ── TASK CRUD ── */
+function dbAddTask(uid,pid,date,time,type,title,desc){
+  const t={id:nextId('t'),user_id:uid,plant_id:pid||null,date,time,type,title,description:desc,done:false,created:now()};
+  DB.tasks.push(t); saveDB(); return t;
+}
+function dbGetTasks(uid,date){ return DB.tasks.filter(t=>t.user_id===uid&&t.date===date); }
+function dbGetTasksByMonth(uid,ym){ return DB.tasks.filter(t=>t.user_id===uid&&t.date.startsWith(ym)); }
+function dbToggleTask(id){
+  const t=DB.tasks.find(t=>t.id===id); if(t){ t.done=!t.done; saveDB(); return t.done; } return false;
+}
+function dbDeleteTask(id){ DB.tasks=DB.tasks.filter(t=>t.id!==id); saveDB(); }
+function now(){ return new Date().toISOString(); }
+
+/* ══════════════════════════════════
+   ESTADO
+══════════════════════════════════ */
+let CU=null, curScreen='s1', hist=[], plantData=null, plantImg=null;
+let calY, calM, selDate, camStream=null, taskType='riego';
+
+/* ══════════════════════════════════
+   NAVEGACIÓN
+══════════════════════════════════ */
+function go(id){
+  const from=document.getElementById(curScreen);
+  const to=document.getElementById(id);
+  from.classList.add('out');
+  setTimeout(()=>{ from.classList.remove('on','out'); },320);
+  to.classList.add('on');
+  hist.push(curScreen); curScreen=id;
+  if(id==='s5') renderCal();
+  if(id==='s6') renderPlants();
+  if(id==='s7') renderProfile();
+}
+function goBack(){
+  if(!hist.length) return;
+  const prev=hist.pop();
+  const from=document.getElementById(curScreen);
+  const to=document.getElementById(prev);
+  from.style.transform='translateX(100%)';
+  from.style.opacity='0';
+  setTimeout(()=>{ from.classList.remove('on'); from.style.transform=''; from.style.opacity=''; },320);
+  to.classList.add('on'); curScreen=prev;
+}
+
+/* ══════════════════════════════════
+   AUTH
+══════════════════════════════════ */
+function swTab(t){
+  document.getElementById('tl').classList.toggle('on',t==='l');
+  document.getElementById('tr').classList.toggle('on',t==='r');
+  document.getElementById('pl').classList.toggle('on',t==='l');
+  document.getElementById('pr').classList.toggle('on',t==='r');
+}
+function doLogin(){
+  const u=v('lu'), p=v('lp');
+  if(!u||!p){ toast('⚠️ Completa todos los campos'); return; }
+  const usr=dbGetUser(u,p);
+  if(!usr){ toast('❌ Usuario o contraseña incorrectos'); return; }
+  CU=usr; toast('✅ ¡Bienvenido, '+CU.name+'!');
+  setTimeout(()=>go('s3'),700);
+}
+function doRegister(){
+  const n=v('rn'),u=v('ru'),e=v('re'),p=v('rp');
+  if(!n||!u||!e||!p){ toast('⚠️ Completa todos los campos'); return; }
+  if(p.length<6){ toast('⚠️ Contraseña mínimo 6 caracteres'); return; }
+  if(!/^[^@]+@[^@]+\.[^@]+$/.test(e)){ toast('⚠️ Email no válido'); return; }
+  try{
+    CU=dbAddUser(n,u,e,p);
+    toast('🎉 ¡Cuenta creada! Bienvenido, '+n);
+    setTimeout(()=>go('s3'),700);
+  }catch(ex){ toast('❌ Usuario o email ya registrado'); }
+}
+function doLogout(){
+  CU=null; camOff();
+  document.getElementById('lu').value='';
+  document.getElementById('lp').value='';
+  go('s1');
+}
+function v(id){ return document.getElementById(id).value.trim(); }
+
+/* ══════════════════════════════════
+   CÁMARA
+   (Bridge con App Inventor via AppInventor.setWebViewString)
+══════════════════════════════════ */
+async function openCam(){
+  // Si App Inventor llama desde nativo (AppInventor.setWebViewString("PHOTO:base64..."))
+  // esa función ya está manejada abajo con window.appInventorBridge
+  // Aquí intentamos cámara web nativa
+  if(camStream){
+    // Segunda pulsada → capturar foto
+    capturePhoto(); return;
+  }
+  try{
+    camStream=await navigator.mediaDevices.getUserMedia({
+      video:{facingMode:'environment',width:640,height:480}
+    });
+    const vid=document.getElementById('cam-vid');
+    vid.srcObject=camStream; vid.style.display='block';
+    document.getElementById('scan-ph').style.display='none';
+    document.getElementById('plant-prev').style.display='none';
+    document.getElementById('cam-btn').textContent='📸 Capturar';
+    document.getElementById('cam-btn').onclick=capturePhoto;
+    toast('📷 Cámara activa — toca Capturar');
+  }catch(e){
+    // En App Inventor sin permiso nativo → solicitar via bridge
+    requestAIBridge();
+    toast('📷 Abre la cámara desde el botón nativo');
+  }
+}
+function capturePhoto(){
+  const vid=document.getElementById('cam-vid');
+  const cvs=document.getElementById('cam-cvs');
+  cvs.width=vid.videoWidth||640; cvs.height=vid.videoHeight||480;
+  cvs.getContext('2d').drawImage(vid,0,0);
+  const data=cvs.toDataURL('image/jpeg',.82);
+  camOff(); showPrev(data); analyzeAI(data);
+  document.getElementById('cam-btn').textContent='📷 Cámara';
+  document.getElementById('cam-btn').onclick=openCam;
+}
+function camOff(){
+  if(camStream){ camStream.getTracks().forEach(t=>t.stop()); camStream=null; }
+  document.getElementById('cam-vid').style.display='none';
+}
+function handleFile(e){
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=ev=>{ showPrev(ev.target.result); analyzeAI(ev.target.result); };
+  r.readAsDataURL(f); e.target.value='';
+}
+function showPrev(url){
+  plantImg=url;
+  const pr=document.getElementById('plant-prev');
+  pr.src=url; pr.style.display='block';
+  document.getElementById('scan-ph').style.display='none';
+  document.getElementById('cam-vid').style.display='none';
+}
+
+/* Bridge con App Inventor WebViewer */
+function requestAIBridge(){
+  // App Inventor puede llamar: VisorWeb1.RunJavaScript("window.receivePhoto(base64)")
+  if(window.AppInventor) window.AppInventor.setWebViewString('OPEN_CAMERA');
+}
+// App Inventor llama esto desde bloques: call VisorWeb1.RunJavaScript js "window.receivePhoto('data:...')"
+window.receivePhoto = function(base64){
+  showPrev(base64); analyzeAI(base64);
+};
+
+/* ══════════════════════════════════
+   IA — ANTHROPIC API
+══════════════════════════════════ */
+async function analyzeAI(imgData){
+  const bar=document.getElementById('anal-bar');
+  const fill=document.getElementById('pf');
+  bar.classList.add('show');
+  let prog=0;
+  const iv=setInterval(()=>{ prog=Math.min(prog+Math.random()*7,91); fill.style.width=prog+'%'; },200);
+
+  const b64=imgData.split(',')[1];
+  const mt=imgData.split(';')[0].split(':')[1]||'image/jpeg';
+
+  const prompt=`Analiza la imagen de esta planta y responde SOLO en JSON válido sin texto adicional ni backticks:
+{
+  "common_name": "Nombre común en español",
+  "scientific_name": "Nombre científico",
+  "description": "2-3 oraciones sobre origen y características",
+  "riego": "Moderado/Abundante/Escaso",
+  "luz": "Tipo de luz necesaria",
+  "temperatura": "Rango ideal ej: 18-27°C",
+  "humedad": "Alta/Media/Baja",
+  "tips": ["tip1","tip2","tip3","tip4"],
+  "problems": ["problema: solución1","problema: solución2","problema: solución3"],
+  "schedule": {
+    "water_days": 7,
+    "water_ml": 200,
+    "prune_days": 30,
+    "review_days": 14,
+    "sun_hours": 4,
+    "fertilize_days": 45,
+    "notes": "nota de riego"
+  }
+}
+Si no identificas la planta usa "Planta no identificada" con cuidados generales.`;
+
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        messages:[{role:'user',content:[
+          {type:'image',source:{type:'base64',media_type:mt,data:b64}},
+          {type:'text',text:prompt}
+        ]}]
+      })
+    });
+    const d=await res.json();
+    clearInterval(iv); fill.style.width='100%';
+    let txt=(d.content&&d.content[0])?d.content[0].text||'':'';
+    const jm=txt.match(/\{[\s\S]*\}/);
+    if(!jm) throw new Error('no json');
+    plantData=JSON.parse(jm[0]);
+  }catch(e){
+    clearInterval(iv);
+    plantData=demoPlant();
+    toast('⚠️ Sin conexión — usando datos de ejemplo');
+  }
+  setTimeout(()=>{ bar.classList.remove('show'); fill.style.width='0%'; fillPlant(); go('s4'); },400);
+}
+
+function demoPlant(){
+  return{
+    common_name:'Monstera Deliciosa',scientific_name:'Monstera deliciosa',
+    description:'Originaria de las selvas tropicales de América, es conocida por sus hojas grandes y perforadas. Perfecta para interiores con luz indirecta brillante.',
+    riego:'Moderado',luz:'Indirecta brillante',temperatura:'18-27°C',humedad:'Alta',
+    tips:['Limpia las hojas con paño húmedo mensualmente','No dejes agua estancada en el platillo','Fertiliza cada mes en primavera-verano','Gírala cada 2 semanas para crecimiento uniforme'],
+    problems:['Hojas amarillas: exceso de riego, reduce frecuencia','Puntas marrones: baja humedad, rocía regularmente','Plagas araña: limpia con agua jabonosa suave'],
+    schedule:{water_days:7,water_ml:200,prune_days:30,review_days:14,sun_hours:4,fertilize_days:45,notes:'Agua filtrada a temperatura ambiente'}
+  };
+}
+
+/* ══════════════════════════════════
+   PANTALLA 4 — DETALLES PLANTA
+══════════════════════════════════ */
+function fillPlant(){
+  const p=plantData;
+  set('s4-nm',p.common_name||'Planta');
+  set('s4-sc',p.scientific_name||'');
+  set('s4-desc',p.description||'');
+  set('c-ri',p.riego||'—');
+  set('c-lu',p.luz||'—');
+  set('c-tp',p.temperatura||'—');
+  set('c-hm',p.humedad||'—');
+  if(plantImg) document.getElementById('s4-img').src=plantImg;
+  document.getElementById('s4-tips').innerHTML=(p.tips||[]).map(t=>`<li><span class="tb">✓</span>${t}</li>`).join('');
+  document.getElementById('s4-probs').innerHTML=(p.problems||[]).map(t=>`<li><span class="tb">⚠</span>${t}</li>`).join('');
+}
+function set(id,val){ const el=document.getElementById(id); if(el) el.textContent=val; }
+
+function savePlant(){
+  if(!CU){ toast('⚠️ Inicia sesión primero'); return; }
+  if(!plantData) return;
+  const p=plantData;
+  const plant=dbAddPlant(CU.id,{
+    common_name:p.common_name,scientific_name:p.scientific_name,
+    description:p.description,riego:p.riego,luz:p.luz,
+    temperatura:p.temperatura,humedad:p.humedad,
+    tips:JSON.stringify(p.tips||[]),
+    problems:JSON.stringify(p.problems||[])
+  },plantImg);
+
+  // Auto-generar tareas 30 días
+  const sc=p.schedule||{};
+  const wdays=sc.water_days||7;
+  const pdays=sc.prune_days||30;
+  const rdays=sc.review_days||14;
+  const fdays=sc.fertilize_days||45;
+  const wml=sc.water_ml||200;
+  const today=new Date();
+
+  for(let i=0;i<=30;i++){
+    const d=new Date(today); d.setDate(d.getDate()+i);
+    const ds=d.toISOString().split('T')[0];
+    if(i%wdays===0)
+      dbAddTask(CU.id,plant.id,ds,'08:00','riego',`Regar ${p.common_name}`,`${wml}ml. ${sc.notes||''}`);
+    if(i>0&&i%pdays===0)
+      dbAddTask(CU.id,plant.id,ds,'10:00','poda',`Podar ${p.common_name}`,'Retira hojas secas o dañadas');
+    if(i>0&&i%rdays===0)
+      dbAddTask(CU.id,plant.id,ds,'11:00','revision',`Revisar ${p.common_name}`,'Verifica humedad y plagas');
+    if(i>0&&i%fdays===0)
+      dbAddTask(CU.id,plant.id,ds,'09:30','fertilizante',`Fertilizar ${p.common_name}`,'Aplica fertilizante balanceado');
+  }
+  toast('🌱 ¡Planta y tareas guardadas!');
+  setTimeout(()=>go('s6'),700);
+}
+
+/* ══════════════════════════════════
+   PANTALLA 6 — MIS PLANTAS
+══════════════════════════════════ */
+function renderPlants(){
+  const pg=document.getElementById('pg');
+  if(!CU){ pg.innerHTML=`<div class="empty"><div class="empty-ic">🔐</div><div class="empty-tx">Inicia sesión</div><div class="empty-su">para ver tus plantas</div></div>`; return; }
+  const plants=dbGetPlants(CU.id);
+  document.getElementById('s6-cnt').textContent=plants.length+' planta'+(plants.length!==1?'s':'');
+  if(!plants.length){
+    pg.innerHTML=`<div class="empty"><div class="empty-ic">🌱</div><div class="empty-tx">Aún no tienes plantas</div><div class="empty-su">Escanea tu primera planta con la cámara</div></div>`;
+    return;
+  }
+  pg.innerHTML=plants.map(p=>`
+    <div class="plant-item" onclick="viewPlant(${p.id})">
+      <div class="pthumb">${p.image?`<img src="${p.image}" alt="${p.common_name}">`:'🌿'}</div>
+      <div class="pi-info">
+        <div class="pi-nm">${p.common_name}</div>
+        <div class="pi-sc">${p.scientific_name||''}</div>
+        <div class="pi-dt">📅 ${p.added?p.added.split('T')[0]:''}</div>
+      </div>
+      <button class="p-del" onclick="event.stopPropagation();delPlant(${p.id})">🗑</button>
+    </div>
+  `).join('');
+}
+function viewPlant(id){
+  const p=DB.plants.find(x=>x.id===id); if(!p) return;
+  plantData={
+    common_name:p.common_name,scientific_name:p.scientific_name,
+    description:p.description,riego:p.riego,luz:p.luz,
+    temperatura:p.temperatura,humedad:p.humedad,
+    tips:JSON.parse(p.tips||'[]'),problems:JSON.parse(p.problems||'[]')
+  };
+  plantImg=p.image||null; fillPlant(); go('s4');
+}
+function delPlant(id){
+  if(!confirm('¿Eliminar esta planta y sus tareas?')) return;
+  dbDeletePlant(id); renderPlants(); toast('🗑 Planta eliminada');
+}
+
+/* ══════════════════════════════════
+   PANTALLA 5 — CALENDARIO
+══════════════════════════════════ */
+const MOS=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const DOW=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+
+function initCal(){
+  const n=new Date(); calY=n.getFullYear(); calM=n.getMonth();
+  selDate=n.toISOString().split('T')[0];
+}
+function chMo(d){
+  calM+=d;
+  if(calM<0){calM=11;calY--;} if(calM>11){calM=0;calY++;}
+  renderCal();
+}
+function renderCal(){
+  document.getElementById('cm-lbl').textContent=MOS[calM]+' '+calY;
+  const grid=document.getElementById('cgrid');
+  grid.innerHTML='';
+  DOW.forEach(d=>{ const el=document.createElement('div'); el.className='cdow'; el.textContent=d; grid.appendChild(el); });
+  const first=new Date(calY,calM,1).getDay();
+  const dim=new Date(calY,calM+1,0).getDate();
+  const today=new Date().toISOString().split('T')[0];
+  const ym=`${calY}-${String(calM+1).padStart(2,'0')}`;
+  let taskDates=new Set();
+  if(CU){ dbGetTasksByMonth(CU.id,ym).forEach(t=>taskDates.add(t.date)); }
+  for(let i=0;i<first;i++){ const el=document.createElement('div'); el.className='cday om'; grid.appendChild(el); }
+  for(let d=1;d<=dim;d++){
+    const ds=`${calY}-${String(calM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const el=document.createElement('div'); el.className='cday';
+    if(ds===today) el.classList.add('td');
+    if(ds===selDate&&ds!==today) el.classList.add('sel');
+    if(taskDates.has(ds)) el.classList.add('ht');
+    el.textContent=d;
+    el.onclick=()=>{ selDate=ds; renderCal(); };
+    grid.appendChild(el);
+  }
+  renderTasks();
+}
+function renderTasks(){
+  const list=document.getElementById('tk-list');
+  document.getElementById('tk-cnt').textContent='0';
+  if(!CU){ list.innerHTML='<div style="text-align:center;color:var(--tl);padding:18px;font-size:13px">Inicia sesión para ver tareas</div>'; return; }
+  const tasks=dbGetTasks(CU.id,selDate);
+  document.getElementById('tk-cnt').textContent=tasks.length;
+  const IC={riego:'💧',poda:'✂️',sol:'☀️',revision:'🔍',abono:'🌿',fertilizante:'🪴'};
+  if(!tasks.length){ list.innerHTML='<div style="text-align:center;color:var(--tl);padding:18px;font-size:13px">Sin tareas para este día 🌱</div>'; return; }
+  list.innerHTML=tasks.map(t=>`
+    <div class="task-c type-${t.type}" id="tc-${t.id}">
+      <div class="ti-wrap">${IC[t.type]||'📋'}</div>
+      <div class="ti-info">
+        <div class="ti-time">🕐 ${t.time||'09:00'}</div>
+        <div class="ti-title">${t.title}</div>
+        <div class="ti-desc">${t.description||''}</div>
+      </div>
+      <button class="tchk ${t.done?'done':''}" onclick="togTask(${t.id})">${t.done?'✓':''}</button>
+      <button class="task-del" onclick="removeTask(${t.id})">✕</button>
+    </div>
+  `).join('');
+}
+function togTask(id){
+  const done=dbToggleTask(id);
+  renderTasks(); renderCal();
+  toast(done?'✅ Tarea completada':'↩️ Tarea pendiente');
+}
+function removeTask(id){ dbDeleteTask(id); renderTasks(); renderCal(); toast('🗑 Tarea eliminada'); }
+
+/* ══════════════════════════════════
+   MODAL TAREA
+══════════════════════════════════ */
+function openModal(){
+  if(!CU){ toast('⚠️ Inicia sesión primero'); return; }
+  // Fill plant selector
+  const sel=document.getElementById('tp-sel');
+  const plants=dbGetPlants(CU.id);
+  sel.innerHTML='<option value="">— Sin planta específica —</option>'+
+    plants.map(p=>`<option value="${p.id}">${p.common_name}</option>`).join('');
+  document.getElementById('mod-task').classList.add('show');
+}
+function closeMod(e){
+  if(!e||e.target.id==='mod-task') document.getElementById('mod-task').classList.remove('show');
+}
+function selTp(btn){
+  document.querySelectorAll('.tch').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel'); taskType=btn.dataset.tp;
+}
+const TTITLES={riego:'Regar planta',poda:'Podar planta',sol:'Exposición solar',revision:'Revisar planta',abono:'Abonar planta',fertilizante:'Fertilizar planta'};
+function saveTask(){
+  if(!CU){ toast('⚠️ Inicia sesión'); return; }
+  const desc=document.getElementById('td-in').value.trim();
+  const time=document.getElementById('tt-in').value;
+  const pid=document.getElementById('tp-sel').value;
+  dbAddTask(CU.id,pid?parseInt(pid):null,selDate,time,taskType,TTITLES[taskType]||'Tarea',desc||'Cuidado de planta');
+  closeMod(); renderCal();
+  document.getElementById('td-in').value='';
+  toast('✅ Tarea guardada');
+}
+
+/* ══════════════════════════════════
+   PANTALLA 7 — PERFIL
+══════════════════════════════════ */
+function renderProfile(){
+  if(!CU){ go('s1'); return; }
+  set('p-name',CU.name); set('p-email',CU.email||CU.username);
+  document.getElementById('pav').textContent=CU.name.charAt(0).toUpperCase();
+  const plants=dbGetPlants(CU.id);
+  const tasks=DB.tasks.filter(t=>t.user_id===CU.id);
+  set('st-pl',plants.length);
+  set('st-tk',tasks.length);
+  set('st-dn',tasks.filter(t=>t.done).length);
+}
+function exportData(){
+  if(!CU) return;
+  const data={user:CU.name,plantas:dbGetPlants(CU.id).length,tareas:DB.tasks.filter(t=>t.user_id===CU.id).length,exportado:new Date().toLocaleDateString('es')};
+  toast('📤 '+JSON.stringify(data));
+}
+
+/* ══════════════════════════════════
+   TOAST
+══════════════════════════════════ */
+let toastT;
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+/* ══════════════════════════════════
+   INIT
+══════════════════════════════════ */
+loadDB();
+initCal();
+// Cuenta demo
+if(!DB.users.find(u=>u.username==='demo')){
+  dbAddUser('Usuario Demo','demo','demo@riegomax.com','demo123');
+}
+</script>
+</body>
+</html>
